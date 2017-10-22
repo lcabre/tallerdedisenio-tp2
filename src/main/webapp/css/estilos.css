@@ -1,0 +1,7 @@
+.productos{
+    margin-top: 15px;
+}
+
+.borderless td, .borderless th {
+   border: none;
+}

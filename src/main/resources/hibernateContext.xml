@@ -42,7 +42,7 @@
 		<!--clases persistibles-->
 		<property name="packagesToScan">
 			<list>
-				<value>ar.edu.unlam.smartshop.modelo</value>
+				<value>ar.edu.unlam.smartshop.modelos</value>
 			</list>
 		</property>
 	</bean>
