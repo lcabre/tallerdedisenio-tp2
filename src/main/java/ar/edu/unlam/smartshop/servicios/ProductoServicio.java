@@ -4,7 +4,7 @@ import ar.edu.unlam.smartshop.modelos.Producto;
 
 import java.util.List;
 
-public interface ProdcutoServicio {
+public interface ProductoServicio {
     void save(Producto producto);
     void update(Producto producto);
     void delete(Integer id);

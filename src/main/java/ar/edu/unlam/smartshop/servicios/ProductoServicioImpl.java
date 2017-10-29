@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Service("productoService")
-public class ProductoServicioImpl implements ProdcutoServicio {
+public class ProductoServicioImpl implements ProductoServicio {
 
     @Inject
     private ProductoDao productoDao;

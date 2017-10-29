@@ -1,7 +1,7 @@
 package ar.edu.unlam.smartshop.controladores;
 
 import ar.edu.unlam.smartshop.modelos.Producto;
-import ar.edu.unlam.smartshop.servicios.ProdcutoServicio;
+import ar.edu.unlam.smartshop.servicios.ProductoServicio;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,7 +15,7 @@ import javax.inject.Inject;
 public class ProductoController {
 
     @Inject
-    private ProdcutoServicio productoServicio;
+    private ProductoServicio productoServicio;
 
     @RequestMapping(path = "/producto/create", method = RequestMethod.GET)
     public ModelAndView create() {
