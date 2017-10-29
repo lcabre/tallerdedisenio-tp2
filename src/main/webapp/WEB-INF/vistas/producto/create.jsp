@@ -20,7 +20,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>Nuevo Producto</h3>
-                <form:form action="/producto" method="POST" modelAttribute="producto">
+                <form:form action="${pageContext.request.contextPath}/producto" method="POST" modelAttribute="producto">
                     <div class="form-group">
                         <label for="nombre">Nombre</label>
                         <form:input path="nombre" type="text" id="nombre" placeholder="Nombre del producto" class="form-control" />
