@@ -37,4 +37,16 @@ public class ProductoController {
         model.put("records",productoServicio.list());
         return new ModelAndView("/producto/lista", model);
     }
+
+    @RequestMapping("/busquedas")
+    public ModelAndView busquedas(){
+        return new ModelAndView("/producto/busqueda");
+    }
+
+    @RequestMapping("/busquedas/cercania")
+    public ModelAndView busquedaPorCercania(){
+        ModelMap model = new ModelMap();
+        model.put("records",productoServicio.busquedaPorCercania());
+        return new ModelAndView("/producto/busqueda", model);
+    }
 }

@@ -8,6 +8,7 @@ public interface ProductoServicio {
     void save(Producto producto);
     void update(Producto producto);
     void delete(Integer id);
+    List busquedaPorCercania();
     List list();
     Producto getById(Integer id);
 }
