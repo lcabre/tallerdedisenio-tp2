@@ -1,31 +1,31 @@
 package ar.edu.unlam.smartshop.daos;
 
+import ar.edu.unlam.smartshop.modelos.PivotTable;
 import ar.edu.unlam.smartshop.modelos.Producto;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.List;
 
-@Repository("productoDao")
-public class ProductoDaoImpl implements ProductoDao{
+@Repository("pivotTableDao")
+public class PivotTableDaoImpl implements PivotTableDao{
 
     @Inject
     private SessionFactory sessionFactory;
 
     @Override
     @Transactional
-    public void save(Producto producto) {
+    public void save(PivotTable pivotTable) {
 
         final Session session = sessionFactory.getCurrentSession();
 
         try {
-            session.save(producto);
+            session.save(pivotTable);
         }
         catch (Exception e) {
             //System.out.println("Ya existe el dato");
@@ -34,7 +34,7 @@ public class ProductoDaoImpl implements ProductoDao{
 
     @Override
     @Transactional
-    public void update(Producto producto) {
+    public void update(PivotTable pivotTable) {
 
     }
 
@@ -48,22 +48,22 @@ public class ProductoDaoImpl implements ProductoDao{
     @Transactional
     public List list() {
         final Session session = sessionFactory.getCurrentSession();
-        return session.createCriteria(Producto.class).list();
+        return session.createCriteria(PivotTable.class).list();
     }
 
     @Override
     @Transactional
-    public Producto getById(Integer id) {
+    public PivotTable getById(Integer id) {
         return null;
     }
 
-    @Override
+    /*@Override
     @Transactional
-    public List<Producto> findByIds(Integer[] listaProductos) {
+    public List<PivotTable> findByIds(Integer[] listaProductos) {
         final Session session = sessionFactory.getCurrentSession();
-        return (List<Producto>) session.createCriteria(Producto.class)
+        return (List<PivotTable>) session.createCriteria(PivotTable.class)
                 .add(Restrictions.in("id",listaProductos))
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .list();
-    }
+    }*/
 }

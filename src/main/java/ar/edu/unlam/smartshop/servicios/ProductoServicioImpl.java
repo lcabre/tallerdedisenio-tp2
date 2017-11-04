@@ -1,29 +1,18 @@
 package ar.edu.unlam.smartshop.servicios;
 
-import ar.edu.unlam.smartshop.daos.EstablecimientoDao;
+import ar.edu.unlam.smartshop.daos.PivotTableDao;
 import ar.edu.unlam.smartshop.daos.ProductoDao;
+import ar.edu.unlam.smartshop.modelos.Categoria;
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
+import ar.edu.unlam.smartshop.modelos.PivotTable;
 import ar.edu.unlam.smartshop.modelos.Producto;
-import ar.edu.unlam.smartshop.modelos.api.JsonMatrixResponse;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service("productoService")
@@ -33,7 +22,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     private ProductoDao productoDao;
 
     @Inject
-    private EstablecimientoDao establecimientoDao;
+    private PivotTableDao pivotTableDao;
 
     public void save(Producto producto) {
         productoDao.save(producto);
@@ -60,38 +49,64 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     public List busquedaPorCercania() {
-        /**
-         * Preparacion
-         */
+        //Preparacion del metodo
+        //Creo establecimientos
         Establecimiento coto = new Establecimiento();
         coto.setDireccion("Av. Rivadavia");
         coto.setBarrio("Ramos Mejia");
         coto.setNombre("Coto");
         coto.setNumero(13810);
-
         Establecimiento dia = new Establecimiento();
         dia.setDireccion("Av. de Mayo");
         dia.setBarrio("Ramos Mejia");
         dia.setNombre("Supermercado Dia");
         dia.setNumero(791);
-
         Establecimiento masLejano = new Establecimiento();
         masLejano.setDireccion("Pres. Alvear");
         masLejano.setBarrio("Haedo");
         masLejano.setNombre("Mas lejano");
         masLejano.setNumero(150);
 
-        Producto alfajor = new Producto();
-        alfajor.setNombre("alfajor");
-        alfajor.setEstablecimiento(coto);
-
+        //Creo productos
+        Producto papas = new Producto();
+        papas.setNombre("Papas Fritas");
         Producto caramelo = new Producto();
         caramelo.setNombre("caramelo");
-        caramelo.setEstablecimiento(dia);
-        caramelo.setEstablecimiento(masLejano);
 
-        productoDao.save(alfajor);
-        productoDao.save(caramelo);
+        //Creo categorias
+        Categoria snack = new Categoria();
+        snack.setNombre("Snack");
+        Categoria golosinas = new Categoria();
+        golosinas.setNombre("Golosinas");
+
+        //creo los objetos que modelan las tablas intermedias, para puder asocial un producto con un establecimiento y poder asignarle el precio
+        PivotTable tablaIntermediaEntrePapasYCoto = new PivotTable();
+        PivotTable tablaIntermediaEntreCarameloYDia = new PivotTable();
+        PivotTable tablaIntermediaEntrePapasYMasLejano = new PivotTable();
+
+        //le asigno categoria a los productos
+        papas.setCategoria(snack);
+        caramelo.setCategoria(golosinas);
+
+        //asocio un producto con un establecimiento a traves de la tabla intermedia
+        tablaIntermediaEntrePapasYCoto.setEstablecimiento(coto);
+        tablaIntermediaEntrePapasYCoto.setProducto(papas);
+        tablaIntermediaEntrePapasYCoto.setPrecio(25.5f);
+
+        //asocio un producto con un establecimiento a traves de la tabla intermedia
+        tablaIntermediaEntreCarameloYDia.setEstablecimiento(dia);
+        tablaIntermediaEntreCarameloYDia.setProducto(caramelo);
+        tablaIntermediaEntreCarameloYDia.setPrecio(2f);
+
+        //asocio un producto con un establecimiento a traves de la tabla intermedia
+        tablaIntermediaEntrePapasYMasLejano.setEstablecimiento(masLejano);
+        tablaIntermediaEntrePapasYMasLejano.setProducto(caramelo);
+        tablaIntermediaEntrePapasYMasLejano.setPrecio(3f);
+
+        //guardo a travez de la tabla intermedia todo lo creado anteriormente
+        pivotTableDao.save(tablaIntermediaEntrePapasYCoto);
+        pivotTableDao.save(tablaIntermediaEntreCarameloYDia);
+        pivotTableDao.save(tablaIntermediaEntrePapasYMasLejano);
 
         String direccionDelCliente = null;
         try {
@@ -99,18 +114,19 @@ public class ProductoServicioImpl implements ProductoServicio {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        /**
-         * fin preparacion
-         */
 
-        Integer[] listaProductos = {1, 2};//los ids seleccionados en la lista de compras
+        //Los ides de algunos productos seleccionados, suponiendo que el cliente armo la lista de compras, estos vendran por POST o GET a futuro
+        Integer[] listaProductos = {1, 2};
+        // fin preparacion del metodo
 
         List<Producto> productos = productoDao.findByIds(listaProductos);
 
         List<Establecimiento> establecimientosCercanos = new ArrayList<>();
 
         for (Producto producto:productos){
+            //Hibernate.initialize(producto.getPivotTables());//Solucionar y sacar Eager
             Establecimiento establecimientoMasCercano = producto.getEstablecimientoMasCercano(direccionDelCliente);
+            //establecimientoMasCercano.setProductosBuscado(producto);
             if(!establecimientosCercanos.contains(establecimientoMasCercano)){
                 establecimientosCercanos.add(establecimientoMasCercano);
             }

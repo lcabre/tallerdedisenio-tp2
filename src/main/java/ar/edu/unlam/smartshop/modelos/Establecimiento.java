@@ -21,8 +21,11 @@ public class Establecimiento {
     @Transient
     private Distance distancia;
 
-    @OneToMany(mappedBy = "establecimientos",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Producto> productos = new ArrayList<>();
+    @Transient
+    private List<Producto> productosBuscados = new ArrayList<>();
+
+    @OneToMany(mappedBy = "establecimiento",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PivotTable> pivotTables = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -64,14 +67,6 @@ public class Establecimiento {
         this.numero = numero;
     }
 
-    public List<Producto> getProductos() {
-        return productos;
-    }
-
-    public void setProductos(List<Producto> productos) {
-        this.productos = productos;
-    }
-
     public  String getFullAddress(){
         return this.barrio+", "+this.direccion+" "+this.numero;
     }
@@ -82,5 +77,33 @@ public class Establecimiento {
 
     public void setDistancia(Distance distancia) {
         this.distancia = distancia;
+    }
+
+    public List<PivotTable> getPivotTables() {
+        return pivotTables;
+    }
+
+    public void setPivotTables(List<PivotTable> pivotTables) {
+        this.pivotTables = pivotTables;
+    }
+
+    public List<Producto> getProductosBuscados() {
+        return productosBuscados;
+    }
+
+    public void setProductosBuscados(List<Producto> productosBuscados) {
+        this.productosBuscados = productosBuscados;
+    }
+
+    public void setProductoBuscado(Producto productosBuscado) {
+        this.productosBuscados.add(productosBuscado);
+    }
+
+    public Float getPrecioProducto(Producto producto){
+        for (PivotTable pivotTable:this.getPivotTables()) {
+            if(pivotTable.getProducto().equals(producto))
+                return pivotTable.getPrecio();
+        }
+        return null;
     }
 }

@@ -21,23 +21,19 @@ public class Producto {
     private Integer id;
 
     private String nombre;
-    private Integer stock;
-    private Float precio;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "establecimiento_producto",
-            joinColumns = { @JoinColumn(name = "producto_id") },
-            inverseJoinColumns = { @JoinColumn(name = "establecimiento_id") }
-    )
-    private List<Establecimiento> establecimientos = new ArrayList<>();
+    @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<PivotTable> pivotTables = new ArrayList<>();
 
     @Transient
     private Establecimiento establecimientoMasCercano;
+
+    @Transient
+    private Float precioEnEstablecimiento;
 
     public Integer getId() {
         return id;
@@ -55,22 +51,6 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public Integer getStock() {
-        return stock;
-    }
-
-    public void setStock(Integer stock) {
-        this.stock = stock;
-    }
-
-    public Float getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(Float precio) {
-        this.precio = precio;
-    }
-
     public Categoria getCategoria() {
         return categoria;
     }
@@ -79,12 +59,28 @@ public class Producto {
         this.categoria = categoria;
     }
 
-    public List<Establecimiento> getEstablecimientos() {
-        return establecimientos;
+    public List<PivotTable> getPivotTables() {
+        return pivotTables;
     }
 
-    public void setEstablecimientos(List<Establecimiento> establecimientos) {
-        this.establecimientos = establecimientos;
+    public void setPivotTables(List<PivotTable> pivotTables) {
+        this.pivotTables = pivotTables;
+    }
+
+    public Establecimiento getEstablecimientoMasCercano() {
+        return establecimientoMasCercano;
+    }
+
+    public void setEstablecimientoMasCercano(Establecimiento establecimientoMasCercano) {
+        this.establecimientoMasCercano = establecimientoMasCercano;
+    }
+
+    public Float getPrecioEnEstablecimiento() {
+        return precioEnEstablecimiento;
+    }
+
+    public void setPrecioEnEstablecimiento(Float precioEnEstablecimiento) {
+        this.precioEnEstablecimiento = precioEnEstablecimiento;
     }
 
     public Establecimiento getEstablecimientoMasCercano(String direccionCliente) {
@@ -93,8 +89,16 @@ public class Producto {
         String target = "https://maps.googleapis.com/maps/api/distancematrix/json?"+
                 "origins="+direccionCliente+"&destinations=";
 
+        List<Establecimiento> establecimientos = new ArrayList<>();
+
+        for (PivotTable tablaPivot:this.getPivotTables()) {
+            if(!establecimientos.contains(tablaPivot.getEstablecimiento())){
+                establecimientos.add(tablaPivot.getEstablecimiento());
+            }
+        }
+
         try {
-            for (Iterator<Establecimiento> i = this.establecimientos.iterator(); i.hasNext();) {
+            for (Iterator<Establecimiento> i = establecimientos.iterator(); i.hasNext();) {
                 Establecimiento e = i.next();
                 if(i.hasNext())
                     target += URLEncoder.encode(e.getFullAddress()+"|", "UTF-8");
@@ -115,21 +119,18 @@ public class Producto {
             String jsonResponse = response.readEntity(String.class);
             JsonMatrixResponse distancias = new Gson().fromJson(jsonResponse, JsonMatrixResponse.class);
 
-            for (Integer i=0; this.establecimientos.size() > i; i++){
-                this.establecimientos.get(i).setDistancia(distancias.get(i));
+            for (Integer i=0; establecimientos.size() > i; i++){
+                establecimientos.get(i).setDistancia(distancias.get(i));
+                this.setPrecioEnEstablecimiento(establecimientos.get(i).getPrecioProducto(this));
+                establecimientos.get(i).setProductoBuscado(this);
             }
 
-            return Collections.min(this.establecimientos, Comparator.comparing(c -> c.getDistancia().getValue()));
+            this.establecimientoMasCercano = Collections.min(establecimientos, Comparator.comparing(c -> c.getDistancia().getValue()));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         return establecimientoMasCercano;
-    }
-
-    public void setEstablecimiento(Establecimiento establecimiento) {
-        if(!this.establecimientos.contains(establecimiento))
-            this.establecimientos.add(establecimiento);
     }
 }

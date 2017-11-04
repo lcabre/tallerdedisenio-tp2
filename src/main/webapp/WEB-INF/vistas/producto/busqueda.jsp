@@ -24,7 +24,13 @@
                 <c:forEach var="establecimiento" items="${records}">
                     <ul>
                         <li>ID: <c:out value="${establecimiento.id}"/> - Nombre: <c:out value="${establecimiento.nombre}"/></li>
+                        <c:forEach items="${establecimiento.getProductosBuscados()}" var="producto" varStatus="rowStatus">
+                            <ul>
+                                <li>Producto: <c:out value="${producto.nombre}"/> - Precio: <c:out value="$${producto.getPrecioEnEstablecimiento()}"/></li>
+                            </ul>
+                        </c:forEach>
                     </ul>
+
                 </c:forEach>
             </div>
         </div>
