@@ -126,7 +126,6 @@ public class ProductoServicioImpl implements ProductoServicio {
         for (Producto producto:productos){
             //Hibernate.initialize(producto.getPivotTables());//Solucionar y sacar Eager
             Establecimiento establecimientoMasCercano = producto.getEstablecimientoMasCercano(direccionDelCliente);
-            //establecimientoMasCercano.setProductosBuscado(producto);
             if(!establecimientosCercanos.contains(establecimientoMasCercano)){
                 establecimientosCercanos.add(establecimientoMasCercano);
             }
