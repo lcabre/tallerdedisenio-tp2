@@ -58,4 +58,8 @@ public class JsonMatrixResponse {
 
         return index;
     }
+
+    public Distance get(Integer i){
+        return this.rows.get(0).getElements().get(i).getDistance();
+    }
 }

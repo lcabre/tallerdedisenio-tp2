@@ -9,6 +9,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
@@ -74,16 +75,23 @@ public class ProductoServicioImpl implements ProductoServicio {
         dia.setNombre("Supermercado Dia");
         dia.setNumero(791);
 
+        Establecimiento masLejano = new Establecimiento();
+        masLejano.setDireccion("Pres. Alvear");
+        masLejano.setBarrio("Haedo");
+        masLejano.setNombre("Mas lejano");
+        masLejano.setNumero(150);
+
         Producto alfajor = new Producto();
         alfajor.setNombre("alfajor");
         alfajor.setEstablecimiento(coto);
 
-        Producto alfajor2 = new Producto();
-        alfajor2.setNombre("alfajor");
-        alfajor2.setEstablecimiento(dia);
+        Producto caramelo = new Producto();
+        caramelo.setNombre("caramelo");
+        caramelo.setEstablecimiento(dia);
+        caramelo.setEstablecimiento(masLejano);
 
         productoDao.save(alfajor);
-        productoDao.save(alfajor2);
+        productoDao.save(caramelo);
 
         String direccionDelCliente = null;
         try {
@@ -95,45 +103,19 @@ public class ProductoServicioImpl implements ProductoServicio {
          * fin preparacion
          */
 
-        List<Establecimiento> establecimientos = establecimientoDao.queContengan("alfajor");
+        Integer[] listaProductos = {1, 2};//los ids seleccionados en la lista de compras
 
-        String API_KEY = "AIzaSyDwZrfQ2Nod2H7aqcYAfbCcSS_OdFnt9tY";
-        Client client = ClientBuilder.newClient();
-        String target = "https://maps.googleapis.com/maps/api/distancematrix/json?"+
-                "origins="+direccionDelCliente+"&destinations=";
+        List<Producto> productos = productoDao.findByIds(listaProductos);
 
-        try {
-            for (Iterator<Establecimiento> i = establecimientos.iterator(); i.hasNext();) {
-                Establecimiento e = i.next();
-                if(i.hasNext())
-                    target += URLEncoder.encode(e.getFullAddress()+"|", "UTF-8");
-                else
-                    target += URLEncoder.encode(e.getFullAddress(), "UTF-8");
+        List<Establecimiento> establecimientosCercanos = new ArrayList<>();
+
+        for (Producto producto:productos){
+            Establecimiento establecimientoMasCercano = producto.getEstablecimientoMasCercano(direccionDelCliente);
+            if(!establecimientosCercanos.contains(establecimientoMasCercano)){
+                establecimientosCercanos.add(establecimientoMasCercano);
             }
-            target += "&key="+API_KEY;
-
-            WebTarget webResource = client.target(target);
-            Invocation.Builder invocationBuilder = webResource.request(MediaType.TEXT_PLAIN_TYPE);
-            Response response = invocationBuilder.get();
-
-            if (response.getStatus() != 200) {
-                throw new RuntimeException("Fallo : HTTP error code : "
-                        + response.getStatus());
-            }
-
-            String jsonResponse = response.readEntity(String.class);
-            JsonMatrixResponse json = new Gson().fromJson(jsonResponse, JsonMatrixResponse.class);
-
-            List<Establecimiento> listado =new ArrayList<>();
-            listado.add(establecimientos.get(json.getMenorDistanciaIndex()));
-
-            if(json.getStatus().equals("OK")){
-                return listado;
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return null;
+
+        return establecimientosCercanos;
     }
 }

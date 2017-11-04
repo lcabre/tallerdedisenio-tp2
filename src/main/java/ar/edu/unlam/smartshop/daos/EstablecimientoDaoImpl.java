@@ -5,10 +5,12 @@ import ar.edu.unlam.smartshop.modelos.Producto;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.lang.reflect.Array;
 import java.util.List;
 
 @Repository("establecimientoDao")
@@ -21,7 +23,14 @@ public class EstablecimientoDaoImpl implements EstablecimientoDao{
     @Transactional
     public void save(Establecimiento establecimiento) {
         final Session session = sessionFactory.getCurrentSession();
-        session.save(establecimiento);
+
+        try {
+            session.persist(establecimiento);
+        }
+        catch (Exception e) {
+            //System.out.println("Ya existe el dato");
+        }
+
     }
 
     @Override
@@ -51,11 +60,11 @@ public class EstablecimientoDaoImpl implements EstablecimientoDao{
 
     @Override
     @Transactional
-    public List<Establecimiento> queContengan(String producto) {
+    public List<Establecimiento> queContengan(Integer[] producto) {
         final Session session = sessionFactory.getCurrentSession();
         return (List<Establecimiento>) session.createCriteria(Establecimiento.class)
                 .createAlias("productos", "prod")
-                .add(Restrictions.eq("prod.nombre",producto))
+                .add(Restrictions.in("prod.id",producto))
                 .list();
     }
 

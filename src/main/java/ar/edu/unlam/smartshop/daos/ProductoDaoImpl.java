@@ -1,8 +1,11 @@
 package ar.edu.unlam.smartshop.daos;
 
 import ar.edu.unlam.smartshop.modelos.Producto;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,8 +21,15 @@ public class ProductoDaoImpl implements ProductoDao{
     @Override
     @Transactional
     public void save(Producto producto) {
+
         final Session session = sessionFactory.getCurrentSession();
-        session.save(producto);
+
+        try {
+            session.persist(producto);
+        }
+        catch (Exception e) {
+            //System.out.println("Ya existe el dato");
+        }
     }
 
     @Override
@@ -45,5 +55,15 @@ public class ProductoDaoImpl implements ProductoDao{
     @Transactional
     public Producto getById(Integer id) {
         return null;
+    }
+
+    @Override
+    @Transactional
+    public List<Producto> findByIds(Integer[] listaProductos) {
+        final Session session = sessionFactory.getCurrentSession();
+        return (List<Producto>) session.createCriteria(Producto.class)
+                .add(Restrictions.in("id",listaProductos))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .list();
     }
 }

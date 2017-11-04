@@ -2,6 +2,7 @@ package ar.edu.unlam.smartshop.daos;
 
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 public interface EstablecimientoDao {
@@ -10,5 +11,5 @@ public interface EstablecimientoDao {
     void delete(Integer id);
     List list();
     Establecimiento getById(Integer id);
-    List<Establecimiento> queContengan(String producto);
+    List<Establecimiento> queContengan(Integer[] productos);
 }

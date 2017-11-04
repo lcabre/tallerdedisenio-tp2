@@ -1,5 +1,7 @@
 package ar.edu.unlam.smartshop.modelos;
 
+import ar.edu.unlam.smartshop.modelos.api.Distance;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,10 @@ public class Establecimiento {
     private String direccion;
     private Integer numero;
 
-    @OneToMany(mappedBy = "establecimiento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Transient
+    private Distance distancia;
+
+    @OneToMany(mappedBy = "establecimientos",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Producto> productos = new ArrayList<>();
 
     public Integer getId() {
@@ -69,5 +74,13 @@ public class Establecimiento {
 
     public  String getFullAddress(){
         return this.barrio+", "+this.direccion+" "+this.numero;
+    }
+
+    public Distance getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(Distance distancia) {
+        this.distancia = distancia;
     }
 }

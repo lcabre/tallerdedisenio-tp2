@@ -10,4 +10,6 @@ public interface ProductoDao {
     void delete(Integer id);
     List list();
     Producto getById(Integer id);
+
+    List<Producto> findByIds(Integer[] listaProductos);
 }

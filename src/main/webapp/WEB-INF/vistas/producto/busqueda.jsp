@@ -20,12 +20,10 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h3>Listado de establecimientos</h3>
+                <h3>Listado de establecimientos mas Cercanos TEST</h3>
                 <c:forEach var="establecimiento" items="${records}">
-                    asdasd
                     <ul>
-                        <li><c:out value="${establecimiento.id}"/></li>
-                        <li><c:out value="${establecimiento.nombre}"/></li>
+                        <li>ID: <c:out value="${establecimiento.id}"/> - Nombre: <c:out value="${establecimiento.nombre}"/></li>
                     </ul>
                 </c:forEach>
             </div>
@@ -37,7 +35,7 @@
         </div>
         <div class="row">
             <div class="col-md-12 productos">
-                test
+
             </div>
         </div>
     </div>
