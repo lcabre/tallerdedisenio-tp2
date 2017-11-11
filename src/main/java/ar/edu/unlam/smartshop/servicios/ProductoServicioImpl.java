@@ -61,6 +61,11 @@ public class ProductoServicioImpl implements ProductoServicio {
         dia.setBarrio("Ramos Mejia");
         dia.setNombre("Supermercado Dia");
         dia.setNumero(791);
+        Establecimiento dia2 = new Establecimiento();
+        dia2.setDireccion("Av. de Mayo");
+        dia2.setBarrio("Ramos Mejia");
+        dia2.setNombre("Supermercado Dia 2");
+        dia2.setNumero(100);
         Establecimiento masLejano = new Establecimiento();
         masLejano.setDireccion("Pres. Alvear");
         masLejano.setBarrio("Haedo");
@@ -72,6 +77,8 @@ public class ProductoServicioImpl implements ProductoServicio {
         papas.setNombre("Papas Fritas");
         Producto caramelo = new Producto();
         caramelo.setNombre("caramelo");
+        Producto tomate = new Producto();
+        tomate.setNombre("tomate");
 
         //Creo categorias
         Categoria snack = new Categoria();
@@ -83,6 +90,7 @@ public class ProductoServicioImpl implements ProductoServicio {
         PivotTable tablaIntermediaEntrePapasYCoto = new PivotTable();
         PivotTable tablaIntermediaEntreCarameloYDia = new PivotTable();
         PivotTable tablaIntermediaEntrePapasYMasLejano = new PivotTable();
+        PivotTable pivottomatedia2 = new PivotTable();
 
         //le asigno categoria a los productos
         papas.setCategoria(snack);
@@ -103,10 +111,15 @@ public class ProductoServicioImpl implements ProductoServicio {
         tablaIntermediaEntrePapasYMasLejano.setProducto(caramelo);
         tablaIntermediaEntrePapasYMasLejano.setPrecio(3f);
 
+        pivottomatedia2.setEstablecimiento(dia2);
+        pivottomatedia2.setProducto(tomate);
+        pivottomatedia2.setPrecio(101f);
+
         //guardo a travez de la tabla intermedia todo lo creado anteriormente
         pivotTableDao.save(tablaIntermediaEntrePapasYCoto);
         pivotTableDao.save(tablaIntermediaEntreCarameloYDia);
         pivotTableDao.save(tablaIntermediaEntrePapasYMasLejano);
+        pivotTableDao.save(pivottomatedia2);
 
         String direccionDelCliente = null;
         try {
@@ -116,7 +129,7 @@ public class ProductoServicioImpl implements ProductoServicio {
         }
 
         //Los ides de algunos productos seleccionados, suponiendo que el cliente armo la lista de compras, estos vendran por POST o GET a futuro
-        Integer[] listaProductos = {1, 2};
+        Integer[] listaProductos = {1, 2, 3};
         // fin preparacion del metodo
 
         List<Producto> productos = productoDao.findByIds(listaProductos);
@@ -132,5 +145,32 @@ public class ProductoServicioImpl implements ProductoServicio {
         }
 
         return establecimientosCercanos;
+    }
+
+    public String parseJsonData(List<Establecimiento> establecimientos){
+        String jsonData = "";
+        for (Integer i=0; establecimientos.size() > i; i++){
+            if(i==0)
+                jsonData += "{\"establecimientos\":[{";
+            else
+                jsonData += ",{";
+
+            jsonData += "\"nombre\":\""+establecimientos.get(i).getNombre()+"\",";
+            jsonData += "\"direccion\":\""+establecimientos.get(i).getFullAddress()+"\",";
+            jsonData += "\"productos\":[";
+            for (Integer j=0; establecimientos.get(i).getProductosBuscados().size() > j; j++){
+                if(j==0)
+                    jsonData += "{";
+                else
+                    jsonData += ",{";
+                jsonData += "\"nombre\":\""+establecimientos.get(i).getProductosBuscados().get(j).getNombre()+"\",";
+                jsonData += "\"precio\":\""+establecimientos.get(i).getProductosBuscados().get(j).getPrecioEnEstablecimiento()+"\"";
+                jsonData += "}";
+            }
+            jsonData += "]}";
+        }
+        jsonData += "]}";
+
+        return jsonData;
     }
 }

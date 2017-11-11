@@ -1,5 +1,6 @@
 package ar.edu.unlam.smartshop.controladores;
 
+import ar.edu.unlam.smartshop.modelos.Establecimiento;
 import ar.edu.unlam.smartshop.modelos.Producto;
 import ar.edu.unlam.smartshop.servicios.ProductoServicio;
 import org.springframework.stereotype.Controller;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
+import java.util.List;
 
 @Controller
 public class ProductoController {
@@ -46,7 +48,10 @@ public class ProductoController {
     @RequestMapping("/busquedas/cercania")
     public ModelAndView busquedaPorCercania(){
         ModelMap model = new ModelMap();
-        model.put("records",productoServicio.busquedaPorCercania());
+        List establecimientosMasCercanos = productoServicio.busquedaPorCercania();
+        String json = productoServicio.parseJsonData((List<Establecimiento>) establecimientosMasCercanos);
+        model.put("records",establecimientosMasCercanos);
+        model.put("jsonData",json);
         return new ModelAndView("/producto/busqueda", model);
     }
 }

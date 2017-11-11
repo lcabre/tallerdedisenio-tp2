@@ -1,5 +1,6 @@
 package ar.edu.unlam.smartshop.servicios;
 
+import ar.edu.unlam.smartshop.modelos.Establecimiento;
 import ar.edu.unlam.smartshop.modelos.Producto;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface ProductoServicio {
     List busquedaPorCercania();
     List list();
     Producto getById(Integer id);
+    String parseJsonData(List<Establecimiento> establecimientos);
 }

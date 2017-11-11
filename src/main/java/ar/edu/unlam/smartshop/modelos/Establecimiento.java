@@ -106,4 +106,18 @@ public class Establecimiento {
         }
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "Establecimiento{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", barrio='" + barrio + '\'' +
+                ", direccion='" + direccion + '\'' +
+                ", numero=" + numero +
+                ", distancia=" + distancia +
+                ", productosBuscados=" + productosBuscados +
+                ", pivotTables=" + pivotTables +
+                '}';
+    }
 }
