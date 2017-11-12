@@ -1,5 +1,6 @@
 package ar.edu.unlam.smartshop.daos;
 
+import ar.edu.unlam.smartshop.modelos.ListaCompras;
 import ar.edu.unlam.smartshop.modelos.Producto;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -65,5 +66,36 @@ public class ProductoDaoImpl implements ProductoDao{
                 .add(Restrictions.in("id",listaProductos))
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .list();
+    }
+    
+    @Override
+    @Transactional
+    public List<Producto> findProductsByCategory(Integer id)
+    {
+    	final Session session = sessionFactory.getCurrentSession();
+    	
+    	ListaCompras idLista = (ListaCompras) session.createCriteria(ListaCompras.class)
+    								.createAlias("producto", "pro")
+    								.add(Restrictions.eqOrIsNull("pro.id", id))
+    								.uniqueResult();
+    	
+    	if(idLista == null)
+    	{
+    		List<Producto> cat;
+        	cat = session.createCriteria(Producto.class)
+        					.createAlias("categoria", "cat")
+        					.add( Restrictions.eq("cat.id", id) )
+        					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+        					.list();
+        	
+        	return cat;
+    	}
+    	else
+    	{
+    		return null;
+    	}
+    	
+    	
+    	
     }
 }

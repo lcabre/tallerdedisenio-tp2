@@ -133,4 +133,10 @@ public class ProductoServicioImpl implements ProductoServicio {
 
         return establecimientosCercanos;
     }
+    
+    @Override
+    public List<Producto> findProductsByCategory(Integer id)
+    {
+    	return productoDao.findProductsByCategory(id);
+    }
 }

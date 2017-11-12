@@ -11,4 +11,7 @@ public interface ProductoServicio {
     List busquedaPorCercania();
     List list();
     Producto getById(Integer id);
+    
+    List<Producto> findProductsByCategory(Integer id);
+    
 }

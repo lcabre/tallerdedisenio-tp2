@@ -26,6 +26,7 @@
                         <li><a href="#">Salir</a></li>
                     </ul>
                 </li>
+                <li><a href="${pageContext.request.contextPath}/busquedas/productos/lista">Mi Lista</a></li>
             </ul>
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
