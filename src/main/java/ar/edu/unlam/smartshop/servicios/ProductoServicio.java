@@ -11,4 +11,5 @@ public interface ProductoServicio {
     List busquedaPorCercania();
     List list();
     Producto getById(Integer id);
+    List busquedaPorMayorRapidezEnAtencion();
 }

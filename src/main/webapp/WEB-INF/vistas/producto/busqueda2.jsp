@@ -20,10 +20,10 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <h3>Listado de establecimientos mas Cercanos TEST</h3>
+                <h3>Listado de establecimientos con atenciones mas rapidas TEST</h3>
                 <c:forEach var="establecimiento" items="${records}">
                     <ul>
-                        <li>ID: <c:out value="${establecimiento.id}"/> - Nombre: <c:out value="${establecimiento.nombre}"/></li>
+                        <li>ID: <c:out value="${establecimiento.id}"/> - nombre: <c:out value="${establecimiento.nombre}"/>- rapidez: <c:out value="${establecimiento.rapidezEnAtencion}"/></li>
                         <c:forEach items="${establecimiento.getProductosBuscados()}" var="producto" varStatus="rowStatus">
                             <ul>
                                 <li>Producto: <c:out value="${producto.nombre}"/> - Precio: <c:out value="$${producto.getPrecioEnEstablecimiento()}"/></li>
@@ -34,23 +34,9 @@
                 </c:forEach>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <a href="${pageContext.request.contextPath}/busquedas/cercania"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Cercanía</button></a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12 productos">
 
-            </div>
-        </div>
+      
     </div>
-    
-    
-            <div class="col-md-12">
-                <a href="${pageContext.request.contextPath}/busquedas/rapidezEnAtencion"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Rapidez en Atencion</button></a>
-            </div>
-
 <%@ include file="/WEB-INF/vistas/includes/scripts.jsp" %>
 </body>
 </html>

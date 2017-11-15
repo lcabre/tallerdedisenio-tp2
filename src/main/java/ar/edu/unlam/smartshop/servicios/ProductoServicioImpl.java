@@ -133,4 +133,71 @@ public class ProductoServicioImpl implements ProductoServicio {
 
         return establecimientosCercanos;
     }
+    
+    
+ 
+	public List busquedaPorMayorRapidezEnAtencion() {
+		
+		//categoria
+		
+		Categoria frutas=new Categoria("frutas");
+		
+		//productos
+		
+		Producto kiwi = new Producto("kiwi",frutas);
+		Producto  frutilla= new Producto("frutilla",frutas);
+		
+		//establecimientos
+		
+		Establecimiento jumbo=new Establecimiento("jumbo","laferrere","rojo",123,5);
+		Establecimiento mercadoCentral=new Establecimiento("mercadoCentral","casanova","roma",500,2);
+		Establecimiento VerduleriaHoracio=new Establecimiento("VerduleriaHoracio","san justo","varela",200,3);
+
+		//asigno productos que vende el establecimiento y el precio de los mismos
+		
+		
+		
+		  PivotTable productosEnJumbo = new PivotTable(jumbo, kiwi,30.0f);
+		  PivotTable productosEnMercadoCentral = new PivotTable(mercadoCentral, frutilla,40.0f);
+		  PivotTable productosEnVerduleriaHoracio = new PivotTable(VerduleriaHoracio, kiwi,20.0f);
+
+		  pivotTableDao.save(productosEnJumbo);
+		  pivotTableDao.save(productosEnMercadoCentral);
+		  pivotTableDao.save(productosEnVerduleriaHoracio);
+		  
+	      //Los ides de algunos productos seleccionados, suponiendo que el cliente armo la lista de compras, estos vendran por POST o GET a futuro
+	        Integer[] listaProductos = {3,4};
+	        // fin preparacion del metodo
+
+	        //son los productos que quiere el cliente que coinciden con los productos disponibles
+	        List<Producto> productos = productoDao.findByIds(listaProductos);
+	        // fin preparacion del metodo
+
+	        
+	
+//de los establecimientos que venden los productos que busco,cuales de ellos tienen mejor atencion?
+	       // List<Establecimiento> establecimientosMasRapidos= new ArrayList<>();
+	    
+	        // de la lista productos le estoy pasando un producto (variable de la clase producto)
+		       List<Establecimiento> establecimientos= new ArrayList<>();
+	        
+		       for (Producto producto:productos)
+	      {
+	       
+	          Establecimiento establecimientoMasRapido = producto.getEstablecimientoConMejorPuntuacion();
+	            if(!establecimientos.contains(establecimientoMasRapido)){
+	            	establecimientos.add(establecimientoMasRapido);
+	            }
+	    	  
+	      }
+	
+//guardo los establecimientos que venden el producto que quiero,en este caso los 3 venden kiwi
+	  
+	 
+		
+			return establecimientos;
+	
+	}
+
+
 }
