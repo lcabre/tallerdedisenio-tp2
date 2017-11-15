@@ -90,7 +90,7 @@ public class ProductoController {
     {
     	ModelMap mp = new ModelMap();
     	mp.put("categorias", categoriaServicio.listCategorias());
-    	return new ModelAndView("/producto/busqueda", mp);
+    	return new ModelAndView("/producto/busqueda_categoria", mp);
     }
     
     @RequestMapping(path = "/busquedas/categoria", method = RequestMethod.GET)
@@ -107,7 +107,7 @@ public class ProductoController {
     	
     	mp.put("productos", productoServicio.findProductsByCategory(id));
     	mp.put("producto", pro);
-    	return new ModelAndView("/producto/busqueda", mp);
+    	return new ModelAndView("/producto/busqueda_categoria", mp);
     }
     
     @RequestMapping(path = "/busquedas/categoria/producto/save", method = RequestMethod.POST)
