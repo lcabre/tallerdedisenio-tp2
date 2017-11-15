@@ -9,7 +9,7 @@ public interface ProductoServicio {
     void save(Producto producto);
     void update(Producto producto);
     void delete(Integer id);
-    List busquedaPorCercania();
+    List busquedaPorCercania(String direccion, Integer[] listaProductos);
     List list();
     Producto getById(Integer id);
     String parseJsonData(List<Establecimiento> establecimientos);

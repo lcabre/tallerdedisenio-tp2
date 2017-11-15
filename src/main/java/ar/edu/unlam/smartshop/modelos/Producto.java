@@ -106,6 +106,7 @@ public class Producto {
                     target += URLEncoder.encode(e.getFullAddress(), "UTF-8");
             }
             target += "&key="+API_KEY;
+            target += "&mode=walking";
 
             WebTarget webResource = client.target(target);
             Invocation.Builder invocationBuilder = webResource.request(MediaType.TEXT_PLAIN_TYPE);

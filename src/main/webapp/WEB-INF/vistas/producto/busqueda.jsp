@@ -21,18 +21,6 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>Listado de establecimientos mas Cercanos TEST</h3>
-                <c:forEach var="establecimiento" items="${records}">
-                    <ul>
-                        <li>ID: <c:out value="${establecimiento.id}"/> - Nombre: <c:out value="${establecimiento.nombre}"/></li>
-                        <c:forEach items="${establecimiento.getProductosBuscados()}" var="producto" varStatus="rowStatus">
-                            ${establecimiento.toString()}
-                            <ul>
-                                <li>Producto: <c:out value="${producto.nombre}"/> - Precio: <c:out value="$${producto.getPrecioEnEstablecimiento()}"/></li>
-                            </ul>
-                        </c:forEach>
-                    </ul>
-
-                </c:forEach>
             </div>
         </div>
         <div class="row">
@@ -41,19 +29,26 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-md-9">
                 <div id="map"></div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <div id="directions-panel"></div>
             </div>
         </div>
     </div>
+    ${direccionDelCliente}
     <%@ include file="/WEB-INF/vistas/includes/scripts.jsp" %>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwZrfQ2Nod2H7aqcYAfbCcSS_OdFnt9tY" ></script>
     <script>-
         $( document ).ready(function() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,
+                center: {lat: -34.618008, lng: -58.433882}
+            });
+            var infowindow = new google.maps.InfoWindow();
             var jsonData = null;
+            var direccionDelCliente = null;
             var origin=null;
             var destination = null;
             var waypts = [];
@@ -61,75 +56,111 @@
                 jsonData = jQuery.parseJSON('${jsonData}');
             </c:if>
 
-            console.log(jsonData.establecimientos[0].direccion, jsonData.establecimientos.length);
+            direccionDelCliente = '${direccionDelCliente}';
 
-            if(jsonData && jsonData.establecimientos.length == 2){
-                origin = jsonData.establecimientos[0].direccion;
-                destination = jsonData.establecimientos[jsonData.establecimientos.length-1].direccion;
-            }else{
-                if(jsonData && jsonData.establecimientos.length >= 2){
-                    origin = jsonData.establecimientos[0].direccion;
-                    destination = jsonData.establecimientos[jsonData.establecimientos.length-1].direccion;
+            origin = direccionDelCliente;
+            destination = direccionDelCliente;
 
-                    var checkboxArray = document.getElementById('waypoints');
-                    for (var i = 0; i < jsonData.establecimientos.length; i++) {
-                        if (i !== 0 && i !== jsonData.establecimientos.length-1) {
-                            waypts.push({
-                                location: jsonData.establecimientos[i].direccion,
-                                stopover: true
-                            });
-                        }
-                    }
-                }else {
-                    origin = jsonData.establecimientos[0].direccion;
-                    destination = jsonData.establecimientos[0].direccion;
-                }
+            for (var i = 0; i < jsonData.establecimientos.length; i++) {
+                waypts.push({
+                    location: jsonData.establecimientos[i].direccion,
+                    stopover: true
+                });
             }
 
-            console.log(origin,destination, waypts);
-            initMap(origin,destination, waypts);
+            initMap(origin,destination, waypts, jsonData.establecimientos, map);
 
-        });
+            function initMap(origin,destination, waypts, establecimientos, map) {
+                console.log(waypts);
+                console.log(establecimientos);
+                var directionsService = new google.maps.DirectionsService;
+                //var directionsDisplay = new google.maps.DirectionsRenderer;
+                var directionsDisplay = new google.maps.DirectionsRenderer({
+                    suppressMarkers: true
+                });
+                directionsDisplay.setMap(map);
+                calculateAndDisplayRoute(directionsService, directionsDisplay, origin,destination, waypts, establecimientos);
+            }
 
-        function initMap(origin,destination, waypts) {
-            var directionsService = new google.maps.DirectionsService;
-            var directionsDisplay = new google.maps.DirectionsRenderer;
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 6,
-                center: {lat: 41.85, lng: -87.65}
-            });
-            directionsDisplay.setMap(map);
-            calculateAndDisplayRoute(directionsService, directionsDisplay, origin,destination, waypts);
-        }
+            function calculateAndDisplayRoute(directionsService, directionsDisplay, origin,destination, waypts, establecimientos) {
+                directionsService.route({
+                    origin: origin,
+                    destination: destination,
+                    waypoints: waypts,
+                    optimizeWaypoints: true,
+                    travelMode: 'WALKING'
+                }, function(response, status) {
+                    console.log(response);
+                    if (status === 'OK') {
+                        directionsDisplay.setDirections(response);
+                        directionsDisplay.setMap(map);
+                        var route = response.routes[0];
+                        var summaryPanel = document.getElementById('directions-panel');
+                        var startLocation = {};
+                        var endLocation = {};
+                        var waypointLocations = [];
+                        summaryPanel.innerHTML = '';
+                        // For each route, display summary information.
+                        /*for (var i = 0; i < route.legs.length; i++) {
 
-        function calculateAndDisplayRoute(directionsService, directionsDisplay, origin,destination, waypts) {
-            console.log(destination);
-            directionsService.route({
-                origin: origin,
-                destination: destination,
-                waypoints: waypts,
-                optimizeWaypoints: true,
-                travelMode: 'DRIVING'
-            }, function(response, status) {
-                if (status === 'OK') {
-                    directionsDisplay.setDirections(response);
-                    var route = response.routes[0];
-                    var summaryPanel = document.getElementById('directions-panel');
-                    summaryPanel.innerHTML = '';
-                    // For each route, display summary information.
-                    for (var i = 0; i < route.legs.length; i++) {
-                        var routeSegment = i + 1;
-                        summaryPanel.innerHTML += '<b>Route Segment: ' + routeSegment +
-                            '</b><br>';
-                        summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
-                        summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
-                        summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+                        }*/
+
+                        var legs = route.legs;
+                        for (i = 0; i < legs.length; i++) {
+                            if (i == 0) {
+                                startLocation.latlng = legs[i].start_location;
+                                startLocation.address = legs[i].start_address;
+                            }
+                            if (i != 0) {
+                                var waypoint = {};
+                                waypoint.latlng = legs[i].start_location;
+                                waypoint.address = legs[i].start_address;
+                                waypointLocations.push(waypoint);
+                            }
+                            if (i == legs.length - 1) {
+                                //endLocation.latlng = legs[i].end_location;
+                                //endLocation.address = legs[i].end_address;
+                            }
+                            var routeSegment = i + 1;
+                            summaryPanel.innerHTML += '<b>Tramo: ' + routeSegment +
+                                '</b><br>';
+                            summaryPanel.innerHTML += route.legs[i].start_address + ' to ';
+                            summaryPanel.innerHTML += route.legs[i].end_address + '<br>';
+                            summaryPanel.innerHTML += route.legs[i].distance.text + '<br><br>';
+                        }
+                        //createMarker(endLocation.latlng, "fin", "algun texto", "http://www.google.com/mapfiles/markerB.png");
+                        createMarker(startLocation.latlng, "Tu ubicacion", "", "http://maps.gstatic.com/mapfiles/markers2/marker_greenA.png");
+                        for (var i = 0; i < waypointLocations.length; i++) {
+                            var establecimiento = establecimientos[route.waypoint_order[i]];
+                            console.log(establecimiento);
+                            var bodyText = "<b>Productos</b>";
+                            establecimiento.productos.forEach(function(producto) {
+                                bodyText +="<br>"+producto.nombre+" ($"+producto.precio+")";
+                            });
+                            createMarker(waypointLocations[i].latlng, establecimiento.nombre, bodyText, "http://www.google.com/mapfiles/marker_yellow.png");
+                        }
+                    } else {
+                        window.alert('Directions request failed due to ' + status);
                     }
-                } else {
-                    window.alert('Directions request failed due to ' + status);
-                }
-            });
-        }
+                });
+            }
+
+            function createMarker(latlng, label, html, url) {
+                var contentString = '<span>' + label + '</span><br>' + html;
+                var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    icon: url,
+                    title: label,
+                    zIndex: Math.round(latlng.lat() * -100000) << 5
+                });
+
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent(contentString);
+                    infowindow.open(map, marker);
+                });
+            }
+        });
     </script>
 </body>
 </html>

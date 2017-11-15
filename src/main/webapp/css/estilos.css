@@ -1,12 +1,17 @@
 .productos{
     margin-top: 15px;
 }
-
 .borderless td, .borderless th {
    border: none;
 }
-
 #map {
     width: 100%;
-    height: 100%
+    height: 100%;
+    margin-top: 15px;
+}
+.gm-style-iw span{
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: inline-block;
 }

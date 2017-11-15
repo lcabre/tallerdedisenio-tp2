@@ -13,6 +13,8 @@ import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service("productoService")
@@ -48,7 +50,7 @@ public class ProductoServicioImpl implements ProductoServicio {
 
     }
 
-    public List busquedaPorCercania() {
+    public List busquedaPorCercania(String direccion, Integer[] listaProductos) {
         //Preparacion del metodo
         //Creo establecimientos
         Establecimiento coto = new Establecimiento();
@@ -123,13 +125,13 @@ public class ProductoServicioImpl implements ProductoServicio {
 
         String direccionDelCliente = null;
         try {
-            direccionDelCliente = URLEncoder.encode("Ramos mejia, necochea 100","UTF-8");
+            direccionDelCliente = URLEncoder.encode(direccion,"UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
         //Los ides de algunos productos seleccionados, suponiendo que el cliente armo la lista de compras, estos vendran por POST o GET a futuro
-        Integer[] listaProductos = {1, 2, 3};
+        //Integer[] listaProductos = {1, 2, 3};
         // fin preparacion del metodo
 
         List<Producto> productos = productoDao.findByIds(listaProductos);
@@ -143,7 +145,7 @@ public class ProductoServicioImpl implements ProductoServicio {
                 establecimientosCercanos.add(establecimientoMasCercano);
             }
         }
-
+        //Collections.sort(establecimientosCercanos, Comparator.comparing(c -> c.getDistancia().getValue()));
         return establecimientosCercanos;
     }
 

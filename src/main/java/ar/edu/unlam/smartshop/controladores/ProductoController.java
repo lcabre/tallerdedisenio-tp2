@@ -47,11 +47,14 @@ public class ProductoController {
 
     @RequestMapping("/busquedas/cercania")
     public ModelAndView busquedaPorCercania(){
+        Integer[] listaProductos = {1, 2, 3};//viene por post
+        String direccionDelCliente = "Ramos mejia, necochea 100";//viene por post
         ModelMap model = new ModelMap();
-        List establecimientosMasCercanos = productoServicio.busquedaPorCercania();
+        List establecimientosMasCercanos = productoServicio.busquedaPorCercania(direccionDelCliente,listaProductos);
         String json = productoServicio.parseJsonData((List<Establecimiento>) establecimientosMasCercanos);
         model.put("records",establecimientosMasCercanos);
         model.put("jsonData",json);
+        model.put("direccionDelCliente",direccionDelCliente);
         return new ModelAndView("/producto/busqueda", model);
     }
 }
