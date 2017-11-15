@@ -6,7 +6,16 @@ import java.util.List;
 
 @Entity
 public class Categoria {
-    @Id
+    public Categoria(String nombre) {
+		super();
+		this.nombre = nombre;
+	}
+
+	public Categoria() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

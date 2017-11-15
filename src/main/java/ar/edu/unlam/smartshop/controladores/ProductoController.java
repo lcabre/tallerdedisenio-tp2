@@ -49,4 +49,11 @@ public class ProductoController {
         model.put("records",productoServicio.busquedaPorCercania());
         return new ModelAndView("/producto/busqueda", model);
     }
+    
+    @RequestMapping("/busquedas/rapidezEnAtencion")
+    public ModelAndView nuevo(){
+        ModelMap model = new ModelMap();
+        model.put("records",productoServicio.busquedaPorMayorRapidezEnAtencion());
+        return new ModelAndView("/producto/busqueda2", model);
+    }
 }

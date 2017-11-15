@@ -16,7 +16,17 @@ import java.util.*;
 @Entity
 public class Producto {
 
-    @Id
+    public Producto(String nombre, Categoria categoria) {
+		super();
+		this.nombre = nombre;
+		this.categoria = categoria;
+	}
+
+	public Producto() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -32,6 +42,9 @@ public class Producto {
     @Transient
     private Establecimiento establecimientoMasCercano;
 
+    @Transient
+    private Establecimiento establecimientoConAtencionMasRapida;
+    
     @Transient
     private Float precioEnEstablecimiento;
 
@@ -133,4 +146,29 @@ public class Producto {
 
         return establecimientoMasCercano;
     }
+
+	public Establecimiento getEstablecimientoConMejorPuntuacion() {
+
+	 
+	        List<Establecimiento> establecimientos = new ArrayList<>();
+
+	        for (PivotTable tablaPivot:this.getPivotTables()) {
+	            if(!establecimientos.contains(tablaPivot.getEstablecimiento())){
+	                establecimientos.add(tablaPivot.getEstablecimiento());
+	            }
+	        }
+
+	       
+
+	            for (Integer i=0; establecimientos.size() > i; i++){
+	   
+	                this.setPrecioEnEstablecimiento(establecimientos.get(i).getPrecioProducto(this));
+	                establecimientos.get(i).setProductoBuscado(this);
+	            }
+
+	            this.establecimientoConAtencionMasRapida = Collections.max(establecimientos, Comparator.comparing(c -> c.getRapidezEnAtencion().byteValue()));
+
+	       
+	        return establecimientoConAtencionMasRapida;
+	}
 }

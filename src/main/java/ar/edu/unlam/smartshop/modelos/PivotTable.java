@@ -6,7 +6,18 @@ import javax.persistence.*;
 @Table(name = "establecimiento_producto")
 public class PivotTable {
 
-    @Id
+    public PivotTable(Establecimiento establecimiento, Producto producto, Float precio) {
+		super();
+		this.establecimiento = establecimiento;
+		this.producto = producto;
+		this.precio = precio;
+	}
+
+	public PivotTable() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@Id
     @GeneratedValue
     private Integer id;
 

@@ -9,7 +9,28 @@ import java.util.List;
 @Entity
 public class Establecimiento {
 
-    @Id
+    public Establecimiento(String nombre, String barrio, String direccion, Integer numero, Integer rapidezEnAtencion) {
+		super();
+		this.nombre = nombre;
+		this.barrio = barrio;
+		this.direccion = direccion;
+		this.numero = numero;
+		this.rapidezEnAtencion = rapidezEnAtencion;
+	}
+
+	public Establecimiento() {
+		// TODO Auto-generated constructor stub
+	}
+
+	public Integer getRapidezEnAtencion() {
+		return rapidezEnAtencion;
+	}
+
+	public void setRapidezEnAtencion(Integer rapidezEnAtencion) {
+		this.rapidezEnAtencion = rapidezEnAtencion;
+	}
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -17,6 +38,7 @@ public class Establecimiento {
     private String barrio;
     private String direccion;
     private Integer numero;
+    private Integer rapidezEnAtencion;
 
     @Transient
     private Distance distancia;
