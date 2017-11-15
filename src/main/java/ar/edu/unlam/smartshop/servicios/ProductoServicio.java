@@ -13,4 +13,5 @@ public interface ProductoServicio {
     List list();
     Producto getById(Integer id);
     String parseJsonData(List<Establecimiento> establecimientos);
+    List busquedaPorMenorPrecio();
 }

@@ -26,6 +26,7 @@
         <div class="row">
             <div class="col-md-12">
                 <a href="${pageContext.request.contextPath}/busquedas/cercania"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Cercanía</button></a>
+                <a href="${pageContext.request.contextPath}/busquedas/menorprecio"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Menor Precio</button></a>
             </div>
         </div>
         <div class="row">
@@ -37,7 +38,6 @@
             </div>
         </div>
     </div>
-    ${direccionDelCliente}
     <%@ include file="/WEB-INF/vistas/includes/scripts.jsp" %>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwZrfQ2Nod2H7aqcYAfbCcSS_OdFnt9tY" ></script>
     <script>-
