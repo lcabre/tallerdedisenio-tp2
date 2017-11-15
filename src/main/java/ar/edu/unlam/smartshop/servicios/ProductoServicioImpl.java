@@ -272,4 +272,10 @@ public class ProductoServicioImpl implements ProductoServicio {
        
         return establecimientosMenorPrecio;
     }
+
+    @Override
+    public List<Producto> findProductsByCategory(Integer id)
+    {
+    	return productoDao.findProductsByCategory(id);
+    }
 }

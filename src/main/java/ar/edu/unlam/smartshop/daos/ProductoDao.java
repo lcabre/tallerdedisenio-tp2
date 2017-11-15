@@ -14,9 +14,10 @@ public interface ProductoDao {
     Producto getById(Integer id);
 
     List<Producto> findByIds(Integer[] listaProductos);
-    
+
 	List<PivotTable> busquedaPorMenorPrecio(List<PivotTable> productosOrdenados);
 	List<PivotTable> ordenarProductosPorMenorPrecio(List<Producto> productos);
 	List<Producto> preparaBusqueda(Integer[] listaProductos);
 	List<Establecimiento> entregaSoloEstablecimientos(List<PivotTable> menorPrecio);
+    List<Producto> findProductsByCategory(Integer id);
 }

@@ -27,8 +27,10 @@
             <div class="col-md-12">
                 <a href="${pageContext.request.contextPath}/busquedas/cercania"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Cercanía</button></a>
                 <a href="${pageContext.request.contextPath}/busquedas/menorprecio"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Menor Precio</button></a>
+                <a href="${pageContext.request.contextPath}/busquedas/categorias"><button class="btn btn-lg btn-info" type="button">Búsqueda por categoria</button></a>
             </div>
         </div>
+                
         <div class="row">
             <div class="col-md-9">
                 <div id="map"></div>
@@ -39,6 +41,7 @@
         </div>
     </div>
     <%@ include file="/WEB-INF/vistas/includes/scripts.jsp" %>
+    <%@ include file="/js/funciones.js" %>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwZrfQ2Nod2H7aqcYAfbCcSS_OdFnt9tY" ></script>
     <script>-
         $( document ).ready(function() {
@@ -46,6 +49,7 @@
                 zoom: 12,
                 center: {lat: -34.618008, lng: -58.433882}
             });
+            var ruta = "${pageContext.request.contextPath}";
             var infowindow = new google.maps.InfoWindow();
             var jsonData = null;
             var direccionDelCliente = null;

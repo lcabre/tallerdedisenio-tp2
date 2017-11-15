@@ -2,6 +2,7 @@ package ar.edu.unlam.smartshop.daos;
 
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
 import ar.edu.unlam.smartshop.modelos.PivotTable;
+import ar.edu.unlam.smartshop.modelos.ListaCompras;
 import ar.edu.unlam.smartshop.modelos.Producto;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -71,7 +72,6 @@ public class ProductoDaoImpl implements ProductoDao{
                 .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .list();
     }
-    
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -83,9 +83,6 @@ public class ProductoDaoImpl implements ProductoDao{
         .list();
          return productos;
     }
-   
-    
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -97,49 +94,72 @@ public class ProductoDaoImpl implements ProductoDao{
         .addOrder(Order.asc("precio"))
         .list();
 		 return menorPrecio;
+	}
+		
+	@Override
+	@Transactional
+	public List<PivotTable> busquedaPorMenorPrecio(List<PivotTable> productosOrdenados){
+	PivotTable elementoABorrar = new PivotTable();
+		List<PivotTable> menorPrecio = productosOrdenados;
+		for (Integer i = 0; i < productosOrdenados.size(); i++) {
+			for (Integer j = 0; j < productosOrdenados.size(); j++) {
+				if (i != j) {
+					if ((productosOrdenados.get(j).getProducto().getId()) == (productosOrdenados.get(i).getProducto().getId())) {
+						elementoABorrar = productosOrdenados.get(j);
+						menorPrecio.remove(elementoABorrar);
+					}
+				}
+			}
 		}
-		
-		@Override
-	    @Transactional
-	    public List<PivotTable> busquedaPorMenorPrecio(List<PivotTable> productosOrdenados){
-        PivotTable elementoABorrar = new PivotTable();
-        List<PivotTable> menorPrecio = productosOrdenados;
-          for(Integer i=0;i<productosOrdenados.size();i++){
-        	 for(Integer j=0;j<productosOrdenados.size();j++){
-        		 if(i!=j){
-        		 	if((productosOrdenados.get(j).getProducto().getId())==(productosOrdenados.get(i).getProducto().getId())){
-        			 elementoABorrar = productosOrdenados.get(j);
-        			 menorPrecio.remove(elementoABorrar);	
-        		 			}
-        		 		}
-        	 		}	
-          		}
-	return menorPrecio; 
-		}	
-		
-		@Override
-	    @Transactional
-	    public List<Establecimiento> entregaSoloEstablecimientos(List<PivotTable> menorPrecio){
-        List<Establecimiento> establecimientosMenorPrecio = new ArrayList<>();
-          for(Integer i=0;i<menorPrecio.size();i++){
-        	  
-        	  establecimientosMenorPrecio.add(menorPrecio.get(i).getEstablecimiento());  
-        	  establecimientosMenorPrecio.get(i).getProductosBuscados().add(menorPrecio.get(i).getProducto());
-        	  menorPrecio.get(i).getProducto().setPrecioEnEstablecimiento(menorPrecio.get(i).getPrecio());
-        	  
-        	 		}	
-          
-          
-          for(Integer i=0;i<establecimientosMenorPrecio.size();i++){
-        	 for(Integer j=0;j<establecimientosMenorPrecio.size();j++){
-        		 if(i!=j){
-        		 	if((establecimientosMenorPrecio.get(j).equals(establecimientosMenorPrecio.get(i)))){
-        			 Establecimiento elementoABorrar = establecimientosMenorPrecio.get(j);
-        			 establecimientosMenorPrecio.remove(elementoABorrar);	
-        		 			}
-        		 		}
-        	 		}	
-          		}
-	return establecimientosMenorPrecio; 
-		}	
+		return menorPrecio;
+	}
+
+	@Override
+	@Transactional
+	public List<Establecimiento> entregaSoloEstablecimientos(List<PivotTable> menorPrecio) {
+		List<Establecimiento> establecimientosMenorPrecio = new ArrayList<>();
+		for (Integer i = 0; i < menorPrecio.size(); i++) {
+
+			establecimientosMenorPrecio.add(menorPrecio.get(i).getEstablecimiento());
+			establecimientosMenorPrecio.get(i).getProductosBuscados().add(menorPrecio.get(i).getProducto());
+			menorPrecio.get(i).getProducto().setPrecioEnEstablecimiento(menorPrecio.get(i).getPrecio());
+
+		}
+
+		for (Integer i = 0; i < establecimientosMenorPrecio.size(); i++) {
+			for (Integer j = 0; j < establecimientosMenorPrecio.size(); j++) {
+				if (i != j) {
+					if ((establecimientosMenorPrecio.get(j).equals(establecimientosMenorPrecio.get(i)))) {
+						Establecimiento elementoABorrar = establecimientosMenorPrecio.get(j);
+						establecimientosMenorPrecio.remove(elementoABorrar);
+					}
+				}
+			}
+		}
+		return establecimientosMenorPrecio;
+	}
+
+	@Override
+	@Transactional
+	public List<Producto> findProductsByCategory(Integer id) {
+		final Session session = sessionFactory.getCurrentSession();
+
+		ListaCompras idLista = (ListaCompras) session.createCriteria(ListaCompras.class)
+				.createAlias("producto", "pro")
+				.add(Restrictions.eqOrIsNull("pro.id", id))
+				.uniqueResult();
+
+		if (idLista == null) {
+			List<Producto> cat;
+			cat = session.createCriteria(Producto.class)
+					.createAlias("categoria", "cat")
+					.add(Restrictions.eq("cat.id", id))
+					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+					.list();
+
+			return cat;
+		} else {
+			return null;
+		}
+	}
 }
