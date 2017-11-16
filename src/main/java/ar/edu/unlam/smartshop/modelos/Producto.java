@@ -30,7 +30,7 @@ public class Producto {
     private List<PivotTable> pivotTables = new ArrayList<>();
 
     @Transient
-    private Establecimiento establecimientoMasCercano;
+    private Establecimiento establecimientoBusqueda;
 
     @Transient
     private Float precioEnEstablecimiento;
@@ -67,12 +67,13 @@ public class Producto {
         this.pivotTables = pivotTables;
     }
 
-    public Establecimiento getEstablecimientoMasCercano() {
-        return establecimientoMasCercano;
+
+    public Establecimiento getEstablecimientoBusqueda() {
+        return establecimientoBusqueda;
     }
 
-    public void setEstablecimientoMasCercano(Establecimiento establecimientoMasCercano) {
-        this.establecimientoMasCercano = establecimientoMasCercano;
+    public void setEstablecimientoBusqueda(Establecimiento establecimientoBusqueda) {
+        this.establecimientoBusqueda = establecimientoBusqueda;
     }
 
     public Float getPrecioEnEstablecimiento() {
@@ -126,12 +127,31 @@ public class Producto {
                 establecimientos.get(i).setProductoBuscado(this);
             }
 
-            this.establecimientoMasCercano = Collections.min(establecimientos, Comparator.comparing(c -> c.getDistancia().getValue()));
+            this.establecimientoBusqueda = Collections.min(establecimientos, Comparator.comparing(c -> c.getDistancia().getValue()));
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return establecimientoMasCercano;
+        return establecimientoBusqueda;
+    }
+
+    public Establecimiento getEstablecimientoConMejorPuntuacion() {
+        List<Establecimiento> establecimientos = new ArrayList<>();
+
+        for (PivotTable tablaPivot:this.getPivotTables()) {
+            if(!establecimientos.contains(tablaPivot.getEstablecimiento())){
+                establecimientos.add(tablaPivot.getEstablecimiento());
+            }
+        }
+
+        for (Integer i=0; establecimientos.size() > i; i++){
+            this.setPrecioEnEstablecimiento(establecimientos.get(i).getPrecioProducto(this));
+            establecimientos.get(i).setProductoBuscado(this);
+        }
+
+        this.establecimientoBusqueda = Collections.max(establecimientos, Comparator.comparing(Establecimiento::getRapidezEnAtencion));
+
+        return establecimientoBusqueda;
     }
 }

@@ -25,14 +25,6 @@
                         <label for="nombre">Nombre</label>
                         <form:input path="nombre" type="text" id="nombre" placeholder="Nombre del producto" class="form-control" />
                     </div>
-                    <div class="form-group">
-                        <label for="stock">Stock</label>
-                        <form:input path="stock" type="number" id="stock" placeholder="Stock del producto" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label for="precio">Precio</label>
-                        <form:input path="precio" type="number" id="precio" placeholder="Precio del producto" class="form-control" />
-                    </div>
                     <button class="btn btn-lg btn-primary" Type="Submit">Guardar</button>
                 </form:form>
             </div>

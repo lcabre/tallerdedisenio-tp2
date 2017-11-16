@@ -41,8 +41,6 @@
                             <tr>
                                 <th class="col-md-4">#</th>
                                 <th class="col-md-4">Nombre</th>
-                                <th class="col-md-4">Precio</th>
-                                <th class="col-md-44">Stock</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -52,8 +50,6 @@
                                 <tr>
                                     <td><c:out value="${producto.id}"/></td>
                                     <td><c:out value="${producto.nombre}"/></td>
-                                    <td><c:out value="${producto.precio}"/></td>
-                                    <td><c:out value="${producto.stock}"/></td>
                                     <td><a href="#"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span></button></a></td>
                                     <td><a href="#"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a></td>
                                 </tr>

@@ -42,7 +42,7 @@ public class ProductoController {
 
     @RequestMapping(path = "/producto", method = RequestMethod.POST)
     public String store(@ModelAttribute("producto") Producto producto) {
-        productoServicio.save(producto);
+        productoServicio.saveConCategoria(producto);
         //return null;
         return "redirect:/productos";
     }
@@ -56,7 +56,7 @@ public class ProductoController {
 
     @RequestMapping("/busquedas")
     public ModelAndView busquedas(){
-        return new ModelAndView("/producto/busqueda");
+        return new ModelAndView("/busquedas/busqueda");
     }
 
     @RequestMapping("/busquedas/cercania")
@@ -71,18 +71,34 @@ public class ProductoController {
         model.put("jsonData",json);
         model.put("direccionDelCliente",direccionDelCliente);
 
-        return new ModelAndView("/producto/busqueda", model);
+        return new ModelAndView("/busquedas/busqueda", model);
     }
 
     @RequestMapping("/busquedas/menorprecio")
     public ModelAndView busquedaPorMenorPrecio(){
+        Integer[] listaProductos = {1, 2, 3};//viene por post
+        String direccionDelCliente = "Ramos mejia, necochea 100";//viene por post
         ModelMap model = new ModelMap();
-        List establecimientosMasBaratos = productoServicio.busquedaPorMenorPrecio();
-        model.put("records",establecimientosMasBaratos);
+        List establecimientosMasBaratos = productoServicio.busquedaPorMenorPrecio(listaProductos);
         String json = productoServicio.parseJsonData((List<Establecimiento>) establecimientosMasBaratos);
+
         model.put("records",establecimientosMasBaratos);
         model.put("jsonData",json);
-        return new ModelAndView("/producto/menorprecio", model);
+        model.put("direccionDelCliente",direccionDelCliente);
+        return new ModelAndView("/busquedas/busqueda_menor_precio", model);
+    }
+
+    @RequestMapping("/busquedas/mayorrapidezatencion")
+    public ModelAndView nuevo(){
+        Integer[] listaProductos = {1, 2, 3};//viene por post
+        String direccionDelCliente = "Ramos mejia, necochea 100";//viene por post
+        ModelMap model = new ModelMap();
+        List establecimientosMejorPuntuados = productoServicio.busquedaPorMayorRapidezEnAtencion(listaProductos);
+        String json = productoServicio.parseJsonData((List<Establecimiento>) establecimientosMejorPuntuados);
+        model.put("records",establecimientosMejorPuntuados);
+        model.put("jsonData",json);
+        model.put("direccionDelCliente",direccionDelCliente);
+        return new ModelAndView("/busquedas/busqueda_mejor_puntuados", model);
     }
 
     @RequestMapping("/busquedas/categorias")
@@ -90,7 +106,7 @@ public class ProductoController {
     {
     	ModelMap mp = new ModelMap();
     	mp.put("categorias", categoriaServicio.listCategorias());
-    	return new ModelAndView("/producto/busqueda_categoria", mp);
+    	return new ModelAndView("/busquedas/busqueda_categoria", mp);
     }
     
     @RequestMapping(path = "/busquedas/categoria", method = RequestMethod.GET)
@@ -107,7 +123,7 @@ public class ProductoController {
     	
     	mp.put("productos", productoServicio.findProductsByCategory(id));
     	mp.put("producto", pro);
-    	return new ModelAndView("/producto/busqueda_categoria", mp);
+    	return new ModelAndView("/busquedas/busqueda_categoria", mp);
     }
     
     @RequestMapping(path = "/busquedas/categoria/producto/save", method = RequestMethod.POST)

@@ -17,6 +17,7 @@ public class Establecimiento {
     private String barrio;
     private String direccion;
     private Integer numero;
+    private Integer rapidezEnAtencion;
 
     @Transient
     private Distance distancia;
@@ -119,5 +120,13 @@ public class Establecimiento {
                 ", productosBuscados=" + productosBuscados +
                 ", pivotTables=" + pivotTables +
                 '}';
+    }
+
+    public Integer getRapidezEnAtencion() {
+        return rapidezEnAtencion;
+    }
+
+    public void setRapidezEnAtencion(Integer rapidezEnAtencion) {
+        this.rapidezEnAtencion = rapidezEnAtencion;
     }
 }

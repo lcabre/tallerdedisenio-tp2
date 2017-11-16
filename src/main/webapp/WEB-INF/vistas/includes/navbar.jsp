@@ -10,12 +10,11 @@
             </button>
             <a class="navbar-brand" href="${pageContext.request.contextPath}/">Smart Shop</a>
         </div>
-
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-                <li class="active"><a href="${pageContext.request.contextPath}/productos">Productos</a></li>
-                <li><a href="${pageContext.request.contextPath}/busquedas">Busquedas</a></li>
+                <li class="${pageContext.request.requestURI.contains('producto') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/productos">Productos</a></li>
+                <li class="${pageContext.request.requestURI.contains('busqueda') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/busquedas">Busquedas</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
