@@ -1,12 +1,9 @@
 package ar.edu.unlam.smartshop.modelos;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 public class ListaCompras {
@@ -15,9 +12,25 @@ public class ListaCompras {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id_lista")
 	private Long id;
-	
-	@OneToOne(cascade = CascadeType.ALL)
-	private Producto producto;
+
+	@Column(name = "fecha", columnDefinition="DATE")
+	private Date fecha;
+
+	private Boolean finalizada;
+
+	private Boolean actual;
+
+	@ManyToMany(cascade =  CascadeType.MERGE, fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "producto_listacompras",
+			joinColumns = { @JoinColumn(name = "id_lista_compra") },
+			inverseJoinColumns = { @JoinColumn(name = "id_producto") }
+	)
+	private List<Producto> productos = new ArrayList<>();
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_usuario")
+	private Usuario usuario;
 
 	public Long getId() {
 		return id;
@@ -27,12 +40,55 @@ public class ListaCompras {
 		this.id = id;
 	}
 
-	public Producto getProducto() {
-		return producto;
+	public List<Producto> getProductos() {
+		return productos;
+	}
+
+	public void setProductos(ArrayList<Producto> productos) {
+		this.productos = productos;
 	}
 
 	public void setProducto(Producto producto) {
-		this.producto = producto;
+		this.productos.add(producto);
 	}
-	
+
+	public Date getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(Date fecha) {
+		this.fecha = fecha;
+	}
+
+	public void setProductos(List<Producto> productos) {
+		this.productos = productos;
+	}
+
+	public void addProducto(Producto producto){
+		this.productos.add(producto);
+	}
+
+	public Boolean getFinalizada() {
+		return finalizada;
+	}
+
+	public void setFinalizada(Boolean finalizada) {
+		this.finalizada = finalizada;
+	}
+
+	public Boolean getActual() {
+		return actual;
+	}
+
+	public void setActual(Boolean actual) {
+		this.actual = actual;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
 }

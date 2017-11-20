@@ -1,20 +1,25 @@
 package ar.edu.unlam.smartshop.servicios;
 
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
+import ar.edu.unlam.smartshop.modelos.ListaCompras;
 import ar.edu.unlam.smartshop.modelos.Producto;
+import ar.edu.unlam.smartshop.modelos.Usuario;
+import ar.edu.unlam.smartshop.modelview.ProductoModelView;
 
 import java.util.List;
 
 public interface ProductoServicio {
+    void save(ProductoModelView producto);
     void save(Producto producto);
-    void saveConCategoria(Producto producto);
     void update(Producto producto);
     void delete(Integer id);
-    List busquedaPorCercania(String direccion, Integer[] listaProductos);
     List list();
     Producto getById(Integer id);
+
+    List busquedaPorCercania(String direccion, ListaCompras lista);
+    List busquedaPorMenorPrecio(ListaCompras lista);
+    List busquedaPorMayorRapidezEnAtencion(ListaCompras lista);
     String parseJsonData(List<Establecimiento> establecimientos);
-    List busquedaPorMenorPrecio(Integer[] listaProductos);
-    List busquedaPorMayorRapidezEnAtencion(Integer[] listaProductos);
-    List<Producto> findProductsByCategory(Integer id);
+
+    Object listByUser(Usuario loguedUser);
 }

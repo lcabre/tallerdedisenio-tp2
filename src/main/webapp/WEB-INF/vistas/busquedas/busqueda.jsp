@@ -28,12 +28,14 @@
                 <a href="${pageContext.request.contextPath}/busquedas/cercania"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Cercanía</button></a>
                 <a href="${pageContext.request.contextPath}/busquedas/menorprecio"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Menor Precio</button></a>
                 <a href="${pageContext.request.contextPath}/busquedas/mayorrapidezatencion"><button class="btn btn-lg btn-primary" Type="button">Búsqueda por Mayor rapidez de atencion</button></a>
-                <a href="${pageContext.request.contextPath}/busquedas/categorias"><button class="btn btn-lg btn-primary" type="button">Búsqueda por categoria</button></a>
             </div>
         </div>
                 
         <div class="row">
             <div class="col-md-9">
+                <c:if test="${not empty error}">
+                    <div class="alert alert-warning">${error}, agregue uno <a href="${pageContext.request.contextPath}/busquedas/productos" class="alert-link">aqui</a>.</div>
+                </c:if>
                 <div id="map"></div>
             </div>
             <div class="col-md-3">
@@ -42,9 +44,8 @@
         </div>
     </div>
     <%@ include file="/WEB-INF/vistas/includes/scripts.jsp" %>
-    <%@ include file="/js/funciones.js" %>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDwZrfQ2Nod2H7aqcYAfbCcSS_OdFnt9tY" ></script>
-    <script>-
+    <script>
         $( document ).ready(function() {
             var map = new google.maps.Map(document.getElementById('map'), {
                 zoom: 12,

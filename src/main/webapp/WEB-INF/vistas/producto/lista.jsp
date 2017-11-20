@@ -25,13 +25,22 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <a href="${pageContext.request.contextPath}/producto/create"><button class="btn btn-lg btn-primary" Type="button">Agregar Producto</button></a>
+                <c:if test="${empty error}">
+                    <a href="${pageContext.request.contextPath}/producto/create"><button class="btn btn-lg btn-primary" Type="button">Agregar Producto</button></a>
+                </c:if>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12 productos">
-                <c:if test="${empty records}">
-                    <div class="alert alert-danger">No tiene productos agregados aun</div>
+
+                <c:if test="${not empty error}">
+                    <div class="alert alert-warning">${error}, ingrese uno <a href="${pageContext.request.contextPath}/establecimiento/create" class="alert-link">aqui</a>.</div>
+                </c:if>
+
+                <c:if test="${empty error}">
+                    <c:if test="${empty records}">
+                        <div class="alert alert-warning">No tiene productos agregados aun</div>
+                    </c:if>
                 </c:if>
 
                 <c:if test="${not empty records}">
@@ -41,6 +50,8 @@
                             <tr>
                                 <th class="col-md-4">#</th>
                                 <th class="col-md-4">Nombre</th>
+                                <th class="col-md-4">Categoria</th>
+                                <th class="col-md-4">Establecimiento</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -50,6 +61,12 @@
                                 <tr>
                                     <td><c:out value="${producto.id}"/></td>
                                     <td><c:out value="${producto.nombre}"/></td>
+                                    <td><c:out value="${producto.categoria.nombre}"/></td>
+                                    <td>
+                                        <c:forEach items="${producto.pivotTables}" var="pivot">
+                                            ${pivot.establecimiento.nombre} ($${pivot.precio}) -
+                                        </c:forEach>
+                                    </td>
                                     <td><a href="#"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span></button></a></td>
                                     <td><a href="#"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a></td>
                                 </tr>

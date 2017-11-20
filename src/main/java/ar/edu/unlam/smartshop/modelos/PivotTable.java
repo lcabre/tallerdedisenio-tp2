@@ -20,6 +20,8 @@ public class PivotTable {
 
     private Float precio;
 
+    private Integer calificacion;
+
     public Integer getId() {
         return id;
     }
@@ -50,5 +52,13 @@ public class PivotTable {
 
     public void setPrecio(Float precio) {
         this.precio = precio;
+    }
+
+    public Integer getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
     }
 }

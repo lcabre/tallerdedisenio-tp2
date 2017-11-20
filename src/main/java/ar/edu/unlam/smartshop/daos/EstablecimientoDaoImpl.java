@@ -2,6 +2,7 @@ package ar.edu.unlam.smartshop.daos;
 
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
 import ar.edu.unlam.smartshop.modelos.Producto;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -23,39 +24,37 @@ public class EstablecimientoDaoImpl implements EstablecimientoDao{
     @Transactional
     public void save(Establecimiento establecimiento) {
         final Session session = sessionFactory.getCurrentSession();
-
-        try {
-            session.persist(establecimiento);
-        }
-        catch (Exception e) {
-            //System.out.println("Ya existe el dato");
-        }
-
+        session.save(establecimiento);
     }
 
     @Override
     @Transactional
-    public void update(Establecimiento producto) {
-
+    public void update(Establecimiento establecimiento) {
+        final Session session = sessionFactory.getCurrentSession();
+        session.update(establecimiento);
     }
 
     @Override
     @Transactional
     public void delete(Integer id) {
-
+        final Session session = sessionFactory.getCurrentSession();
+        session.delete(id);
     }
 
     @Override
     @Transactional
     public List list() {
         final Session session = sessionFactory.getCurrentSession();
-        return session.createCriteria(Establecimiento.class).list();
+        return session.createCriteria(Establecimiento.class)
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+                .list();
     }
 
     @Override
     @Transactional
     public Establecimiento getById(Integer id) {
-        return null;
+        final Session session = sessionFactory.getCurrentSession();
+        return session.get(Establecimiento.class, id);
     }
 
     @Override

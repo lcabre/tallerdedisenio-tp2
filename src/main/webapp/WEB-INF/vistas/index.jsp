@@ -19,7 +19,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>Smart Shop</h1>
-            <h3>Bienvenidos a nuestra APP</h3>
+            <h3>Bienvenidos a Smart Shop</h3>
         </div>
     </div>
 </div>

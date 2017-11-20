@@ -4,8 +4,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import ar.edu.unlam.smartshop.modelos.Usuario;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -22,28 +25,76 @@ public class ListaComprasDaoImpl implements ListaComprasDao {
 		
 	@Override
 	@Transactional
-	public void save(Integer id) {
+	public void save(ListaCompras lista) {
 		final Session session = sessionFactory.getCurrentSession();
-		ListaCompras list = new ListaCompras();
-		
-		Producto prod = (Producto) session.createCriteria(Producto.class)
-											.add(Restrictions.eq("id", id))
-											.uniqueResult();
-		list.setProducto(prod);
-        session.save(list);
+        session.save(lista);
+	}
+
+	@Override
+	@Transactional
+	public void update(ListaCompras lista) {
+		final Session session = sessionFactory.getCurrentSession();
+		session.update(lista);
 	}
 
 	@Override
 	@Transactional
 	public List list() {
 		final Session session = sessionFactory.getCurrentSession();
-		List<Producto> pro;
-		pro = session.createCriteria(ListaCompras.class)
-					.createAlias("producto", "pro")
-					.setProjection(Projections.property("pro.nombre"))
-					.list();
-		
-		return pro;
+		return session.createCriteria(ListaCompras.class)
+				.createAlias("producto", "pro")
+				.setProjection(Projections.property("pro.nombre"))
+				.list();
 	}
 
+	@Override
+	@Transactional
+	public ListaCompras getByUserACtual(Usuario loguedUser) {
+		final Session session = sessionFactory.getCurrentSession();
+		ListaCompras listaCompras = (ListaCompras) session.createCriteria(ListaCompras.class)
+				.createAlias("usuario", "usr")
+				.add(Restrictions.eq("usr.id",loguedUser.getId()))
+				.add(Restrictions.eq("actual",true))
+				//.add(Restrictions.eq("finalizada",false))
+				.uniqueResult();
+
+		if (listaCompras!=null){
+			Hibernate.initialize(listaCompras.getProductos());
+
+			if(listaCompras.getProductos().size()>0){
+				for (Producto producto:listaCompras.getProductos()) {
+					Hibernate.initialize(producto.getPivotTables());
+				}
+			}
+		}
+
+		return listaCompras;
+	}
+
+	@Override
+	@Transactional
+	public List  getByUserHistorial(Usuario loguedUser) {
+		final Session session = sessionFactory.getCurrentSession();
+		List<ListaCompras> historial = session.createCriteria(ListaCompras.class)
+				.createAlias("usuario", "usr")
+				.add(Restrictions.eq("usr.id",loguedUser.getId()))
+				.add(Restrictions.eq("finalizada",true))
+				.setMaxResults(10)
+				.addOrder(Order.desc("fecha"))
+				.list();
+
+		if(historial!=null){
+			for (ListaCompras lista:historial) {
+				Hibernate.initialize(lista.getProductos());
+
+				if(lista.getProductos().size()>0){
+					for (Producto producto:lista.getProductos()) {
+						Hibernate.initialize(producto.getPivotTables());
+					}
+				}
+			}
+		}
+
+		return historial;
+	}
 }

@@ -28,6 +28,10 @@ public class Establecimiento {
     @OneToMany(mappedBy = "establecimiento",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PivotTable> pivotTables = new ArrayList<>();
 
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+
     public Integer getId() {
         return id;
     }
@@ -128,5 +132,13 @@ public class Establecimiento {
 
     public void setRapidezEnAtencion(Integer rapidezEnAtencion) {
         this.rapidezEnAtencion = rapidezEnAtencion;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }

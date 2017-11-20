@@ -3,10 +3,13 @@ package ar.edu.unlam.smartshop.servicios;
 import ar.edu.unlam.smartshop.daos.EstablecimientoDao;
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
 import ar.edu.unlam.smartshop.modelos.Producto;
+import ar.edu.unlam.smartshop.modelos.Usuario;
 import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Random;
 
 @Service("establecimientoService")
 public class EstablecimientoServicioImpl implements EstablecimientoServicio {
@@ -14,13 +17,19 @@ public class EstablecimientoServicioImpl implements EstablecimientoServicio {
     @Inject
     private EstablecimientoDao establecimientoDao;
 
-    public void save(Establecimiento producto) {
-        establecimientoDao.save(producto);
+    @Inject
+    private ServicioLogin servicioLogin;
+
+    public void save(Establecimiento establecimiento, Usuario usuario) {
+        establecimiento.setUsuario(usuario);
+        Random r = new Random();
+        establecimiento.setRapidezEnAtencion(r.nextInt(1000-1) + 1);
+        establecimientoDao.save(establecimiento);
     }
 
     @Override
-    public void update(Establecimiento p) {
-
+    public void update(Establecimiento establecimiento) {
+        establecimientoDao.update(establecimiento);
     }
 
     @Override
@@ -30,11 +39,11 @@ public class EstablecimientoServicioImpl implements EstablecimientoServicio {
 
     @Override
     public Establecimiento getById(Integer id) {
-        return null;
+        return establecimientoDao.getById(id);
     }
 
     @Override
     public void delete(Integer id) {
-
+        establecimientoDao.delete(id);
     }
 }

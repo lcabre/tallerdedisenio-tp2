@@ -1,7 +1,3 @@
-/**
- * Funciones JS categorias.
- */
-
 function search_producto(value)
 {
 	$(".btnSearch").hide();

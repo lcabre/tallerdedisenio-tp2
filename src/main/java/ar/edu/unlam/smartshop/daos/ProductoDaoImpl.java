@@ -1,10 +1,8 @@
 package ar.edu.unlam.smartshop.daos;
 
-import ar.edu.unlam.smartshop.modelos.Establecimiento;
-import ar.edu.unlam.smartshop.modelos.PivotTable;
-import ar.edu.unlam.smartshop.modelos.ListaCompras;
-import ar.edu.unlam.smartshop.modelos.Producto;
+import ar.edu.unlam.smartshop.modelos.*;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
@@ -54,23 +52,31 @@ public class ProductoDaoImpl implements ProductoDao{
     @Transactional
     public List list() {
         final Session session = sessionFactory.getCurrentSession();
-        return session.createCriteria(Producto.class).list();
+        return session.createCriteria(Producto.class)
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();
     }
 
     @Override
     @Transactional
     public Producto getById(Integer id) {
-        return null;
+		final Session session = sessionFactory.getCurrentSession();
+		return session.get(Producto.class, id);
     }
 
     @Override
     @Transactional
-    public List<Producto> findByIds(Integer[] listaProductos) {
-        final Session session = sessionFactory.getCurrentSession();
-        return (List<Producto>) session.createCriteria(Producto.class)
-                .add(Restrictions.in("id",listaProductos))
-                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-                .list();
+    public List<Producto> findByIds(List listaProductos) {
+		final Session session = sessionFactory.getCurrentSession();
+		List<Producto> productos = session.createCriteria(Producto.class)
+				.add(Restrictions.in("id",listaProductos.toArray()))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();
+
+		for (Producto producto:productos) {
+			Hibernate.initialize(producto.getPivotTables());
+		}
+		return productos;
     }
 
 	@SuppressWarnings("unchecked")
@@ -150,7 +156,7 @@ public class ProductoDaoImpl implements ProductoDao{
 				.uniqueResult();
 
 		if (idLista == null) {
-			List<Producto> cat;
+			List cat;
 			cat = session.createCriteria(Producto.class)
 					.createAlias("categoria", "cat")
 					.add(Restrictions.eq("cat.id", id))
@@ -161,5 +167,18 @@ public class ProductoDaoImpl implements ProductoDao{
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	@Transactional
+	public Object listByUser(Usuario loguedUser) {
+		final Session session = sessionFactory.getCurrentSession();
+		return session.createCriteria(Producto.class)
+				.createAlias("pivotTables", "pivot")
+				.createAlias("pivot.establecimiento","est" )
+				.createAlias("est.usuario","usr" )
+				.add(Restrictions.eq("usr.id",loguedUser.getId()))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();
 	}
 }

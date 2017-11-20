@@ -10,6 +10,7 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -22,12 +23,15 @@ public class Producto {
 
     private String nombre;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PivotTable> pivotTables = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "productos", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ListaCompras> listaDeCompras = new ArrayList<>();
 
     @Transient
     private Establecimiento establecimientoBusqueda;
@@ -67,6 +71,13 @@ public class Producto {
         this.pivotTables = pivotTables;
     }
 
+    public List<ListaCompras> getListaDeCompras() {
+        return listaDeCompras;
+    }
+
+    public void setListaDeCompras(List<ListaCompras> listaDeCompras) {
+        this.listaDeCompras = listaDeCompras;
+    }
 
     public Establecimiento getEstablecimientoBusqueda() {
         return establecimientoBusqueda;
@@ -85,6 +96,13 @@ public class Producto {
     }
 
     public Establecimiento getEstablecimientoMasCercano(String direccionCliente) {
+
+        try {
+            direccionCliente = URLEncoder.encode(direccionCliente,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
         String API_KEY = "AIzaSyDwZrfQ2Nod2H7aqcYAfbCcSS_OdFnt9tY";
         Client client = ClientBuilder.newClient();
         String target = "https://maps.googleapis.com/maps/api/distancematrix/json?"+
