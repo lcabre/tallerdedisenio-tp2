@@ -102,48 +102,7 @@ public class ProductoDaoImpl implements ProductoDao{
 		 return menorPrecio;
 	}
 		
-	@Override
-	@Transactional
-	public List<PivotTable> busquedaPorMenorPrecio(List<PivotTable> productosOrdenados){
-	PivotTable elementoABorrar = new PivotTable();
-		List<PivotTable> menorPrecio = productosOrdenados;
-		for (Integer i = 0; i < productosOrdenados.size(); i++) {
-			for (Integer j = 0; j < productosOrdenados.size(); j++) {
-				if (i != j) {
-					if ((productosOrdenados.get(j).getProducto().getId()) == (productosOrdenados.get(i).getProducto().getId())) {
-						elementoABorrar = productosOrdenados.get(j);
-						menorPrecio.remove(elementoABorrar);
-					}
-				}
-			}
-		}
-		return menorPrecio;
-	}
 
-	@Override
-	@Transactional
-	public List<Establecimiento> entregaSoloEstablecimientos(List<PivotTable> menorPrecio) {
-		List<Establecimiento> establecimientosMenorPrecio = new ArrayList<>();
-		for (Integer i = 0; i < menorPrecio.size(); i++) {
-
-			establecimientosMenorPrecio.add(menorPrecio.get(i).getEstablecimiento());
-			establecimientosMenorPrecio.get(i).getProductosBuscados().add(menorPrecio.get(i).getProducto());
-			menorPrecio.get(i).getProducto().setPrecioEnEstablecimiento(menorPrecio.get(i).getPrecio());
-
-		}
-
-		for (Integer i = 0; i < establecimientosMenorPrecio.size(); i++) {
-			for (Integer j = 0; j < establecimientosMenorPrecio.size(); j++) {
-				if (i != j) {
-					if ((establecimientosMenorPrecio.get(j).equals(establecimientosMenorPrecio.get(i)))) {
-						Establecimiento elementoABorrar = establecimientosMenorPrecio.get(j);
-						establecimientosMenorPrecio.remove(elementoABorrar);
-					}
-				}
-			}
-		}
-		return establecimientosMenorPrecio;
-	}
 
 	@Override
 	@Transactional
