@@ -5,6 +5,7 @@ import ar.edu.unlam.smartshop.daos.ProductoDao;
 import ar.edu.unlam.smartshop.modelos.*;
 import ar.edu.unlam.smartshop.modelview.ProductoModelView;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 
@@ -120,9 +121,41 @@ public class ProductoServicioImpl implements ProductoServicio {
         
         List<PivotTable> tablaOrdenada = productoDao.ordenarProductosPorMenorPrecio(productos);
 
-        List<PivotTable> menorPrecio = productoDao.busquedaPorMenorPrecio(tablaOrdenada);
+    	PivotTable elementoABorrar = new PivotTable();
+    		
+    	List<PivotTable> menorPrecio = tablaOrdenada;
+    		for (Integer i = 0; i < tablaOrdenada.size(); i++) {
+    			for (Integer j = 0; j < tablaOrdenada.size(); j++) {
+    				if (i != j) {
+    					if ((tablaOrdenada.get(j).getProducto().getId()) == (tablaOrdenada.get(i).getProducto().getId())) {
+    						elementoABorrar = tablaOrdenada.get(j);
+    						menorPrecio.remove(elementoABorrar);
+    					}
+    				}
+    			}
+    		}
 
-        List<Establecimiento> establecimientosMenorPrecio = productoDao.entregaSoloEstablecimientos(menorPrecio);
+    	
+    	List<Establecimiento> establecimientosMenorPrecio = new ArrayList<>();
+    		
+    		for (Integer i = 0; i < menorPrecio.size(); i++) {
+
+    			establecimientosMenorPrecio.add(menorPrecio.get(i).getEstablecimiento());
+    			establecimientosMenorPrecio.get(i).getProductosBuscados().add(menorPrecio.get(i).getProducto());
+    			menorPrecio.get(i).getProducto().setPrecioEnEstablecimiento(menorPrecio.get(i).getPrecio());
+
+    		}
+
+    		for (Integer i = 0; i < establecimientosMenorPrecio.size(); i++) {
+    			for (Integer j = 0; j < establecimientosMenorPrecio.size(); j++) {
+    				if (i != j) {
+    					if ((establecimientosMenorPrecio.get(j).equals(establecimientosMenorPrecio.get(i)))) {
+    						Establecimiento establecimientoABorrar = establecimientosMenorPrecio.get(j);
+    						establecimientosMenorPrecio.remove(establecimientoABorrar);
+    					}
+    				}
+    			}
+    		}
        
         return establecimientosMenorPrecio;
     }
