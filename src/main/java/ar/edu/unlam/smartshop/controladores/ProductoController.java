@@ -79,7 +79,7 @@ public class ProductoController {
         Usuario loguedUser = servicioLogin.getUserByMail((String) request.getSession().getAttribute("EMAIL"));
         ListaCompras lista = listaComprasServicio.getByUserACtual(loguedUser);
     	listaComprasServicio.addProducto(lista, producto, loguedUser);
-    	return "redirect: /milista";
+    	return "redirect:/milista";
     }
     
     @RequestMapping(path = "/milista", method = RequestMethod.GET)
