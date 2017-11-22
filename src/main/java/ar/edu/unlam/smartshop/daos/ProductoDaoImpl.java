@@ -82,17 +82,6 @@ public class ProductoDaoImpl implements ProductoDao{
 	@SuppressWarnings("unchecked")
 	@Override
     @Transactional
-    public List<Producto> preparaBusqueda(Integer[] listaProductos) {
-        final Session session = sessionFactory.getCurrentSession();
-         List<Producto> productos = session.createCriteria(Producto.class)
-        .add(Restrictions.in("id",listaProductos))
-        .list();
-         return productos;
-    }
-
-	@SuppressWarnings("unchecked")
-	@Override
-    @Transactional
     public List<PivotTable> ordenarProductosPorMenorPrecio(List<Producto> productos) {
         final Session session = sessionFactory.getCurrentSession();
 		List<PivotTable> menorPrecio = session.createCriteria(PivotTable.class)
@@ -100,32 +89,6 @@ public class ProductoDaoImpl implements ProductoDao{
         .addOrder(Order.asc("precio"))
         .list();
 		 return menorPrecio;
-	}
-		
-
-
-	@Override
-	@Transactional
-	public List<Producto> findProductsByCategory(Integer id) {
-		final Session session = sessionFactory.getCurrentSession();
-
-		ListaCompras idLista = (ListaCompras) session.createCriteria(ListaCompras.class)
-				.createAlias("producto", "pro")
-				.add(Restrictions.eqOrIsNull("pro.id", id))
-				.uniqueResult();
-
-		if (idLista == null) {
-			List cat;
-			cat = session.createCriteria(Producto.class)
-					.createAlias("categoria", "cat")
-					.add(Restrictions.eq("cat.id", id))
-					.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
-					.list();
-
-			return cat;
-		} else {
-			return null;
-		}
 	}
 
 	@Override
