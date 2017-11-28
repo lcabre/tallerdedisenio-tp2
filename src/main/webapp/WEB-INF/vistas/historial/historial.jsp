@@ -47,9 +47,9 @@
 											${producto.nombre} -
 										</c:forEach>
 									</td>
-									<form:form action="#" method="POST" modelAttribute="producto">
+									<form:form action="${pageContext.request.contextPath}/historial/buscar" method="POST" modelAttribute="producto">
 										<input type="hidden" name="id" value="${lis.id}"/>
-										<td><button type="button" class="btn btn-success">Usar</button></td>
+										<td><button type="submit" class="btn btn-success">Usar</button></td>
 									</form:form>
 								</tr>
 							</c:forEach>

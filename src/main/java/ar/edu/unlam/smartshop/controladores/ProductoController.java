@@ -4,14 +4,11 @@ import ar.edu.unlam.smartshop.modelos.*;
 import ar.edu.unlam.smartshop.modelview.ProductoModelView;
 import ar.edu.unlam.smartshop.servicios.*;
 
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.inject.Inject;
@@ -27,9 +24,6 @@ public class ProductoController {
 
     @Inject
     private ServicioLogin servicioLogin;
-    
-    @Inject
-    private CategoriaServicio categoriaServicio;
     
     @Inject
     private ListaComprasServicio listaComprasServicio;
@@ -68,7 +62,7 @@ public class ProductoController {
     public ModelAndView mostrarTodosLosProdutos() {
         ModelMap mp = new ModelMap();
         Producto producto = new Producto();
-        mp.put("records", productoServicio.list());
+        mp.put("records", productoServicio.listProductosEnEstablecimientos());
         mp.put("producto", producto);
         return new ModelAndView("/lista/addproducto", mp);
     }
@@ -97,18 +91,18 @@ public class ProductoController {
     	return new ModelAndView("/lista/listaCompras", model);
     }
 
-    @RequestMapping(path = "/mihistorial", method = RequestMethod.GET)
-    public ModelAndView listarHistorialDeCompras(HttpServletRequest request)
+    @RequestMapping(path = "/productos/mas/buscados", method = RequestMethod.GET)
+    public ModelAndView productosMasBuscados(HttpServletRequest request)
     {
         Usuario loguedUser = servicioLogin.getUserByMail((String) request.getSession().getAttribute("EMAIL"));
         ModelMap model = new ModelMap();
-        List listaCompras = listaComprasServicio.getByUserHistorial(loguedUser);
+        List<Producto> productos = productoServicio.getMasBuscados(loguedUser);
 
-        if(listaCompras.size()>0)
-            model.put("lista",listaCompras);
+        if(productos.size()>0)
+            model.put("records",productos);
         else
-            model.put("error","No tiene listas de compras guardadas");
+            model.put("error","No se encontraron suficientes datos para mostrar un analisis");
 
-        return new ModelAndView("/historial/historial", model);
+        return new ModelAndView("/masbuscados/lista", model);
     }
 }

@@ -6,6 +6,8 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.ProjectionList;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
@@ -100,6 +102,37 @@ public class ProductoDaoImpl implements ProductoDao{
 				.createAlias("pivot.establecimiento","est" )
 				.createAlias("est.usuario","usr" )
 				.add(Restrictions.eq("usr.id",loguedUser.getId()))
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();
+	}
+
+	@Override
+	@Transactional
+	public List listProductosEnEstablecimientos() {
+		final Session session = sessionFactory.getCurrentSession();
+		return session.createCriteria(Producto.class)
+				.createAlias("pivotTables", "pivot")
+				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();
+	}
+
+	@Override
+	@Transactional
+	public List getMasBuscados(Usuario loguedUser) {
+		final Session session = sessionFactory.getCurrentSession();
+		return session.createCriteria(Producto.class)
+				.createAlias("listaDeCompras", "lista")
+				.createAlias("pivotTables", "pivot")
+				.createAlias("pivot.establecimiento","est" )
+				.createAlias("est.usuario","usr" )
+				.setProjection(Projections.projectionList()
+						.add(Projections.groupProperty("id"),"id")
+						.add(Projections.groupProperty("usr.id"),"user_id")
+						.add(Projections.property("nombre"),"nombre")
+						.add(Projections.rowCount(),"total")
+				)
+				//.setProjection(Projections.rowCount())
+				//.add(Restrictions.eq("usr.id",loguedUser.getId()))
 				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
 				.list();
 	}

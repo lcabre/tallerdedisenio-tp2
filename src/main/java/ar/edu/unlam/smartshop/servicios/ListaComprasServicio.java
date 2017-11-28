@@ -15,4 +15,8 @@ public interface ListaComprasServicio {
 	void addProducto(ListaCompras lista, Producto pro, Usuario loguedUser);
 
 	List getByUserHistorial(Usuario loguedUser);
+
+    ListaCompras getById(Integer id);
+
+    void delete(ListaCompras listaActual);
 }

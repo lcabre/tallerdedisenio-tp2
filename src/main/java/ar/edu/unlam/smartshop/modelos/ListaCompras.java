@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class ListaCompras {
+public class ListaCompras{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="id_lista")
-	private Long id;
+	private Integer id;
 
 	@Column(name = "fecha", columnDefinition="DATE")
 	private Date fecha;
@@ -32,11 +32,25 @@ public class ListaCompras {
 	@JoinColumn(name = "id_usuario")
 	private Usuario usuario;
 
-	public Long getId() {
+	public ListaCompras clone() {
+		ListaCompras lista = new ListaCompras();
+		for (Producto prod:this.productos) {
+			lista.addProducto(prod);
+		}
+		//lista.setProductos(this.productos);
+		lista.setActual(true);
+		lista.setFinalizada(null);
+		lista.setFecha(new Date());
+		lista.setUsuario(this.usuario);
+
+		return lista;
+	}
+
+	public Integer getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 

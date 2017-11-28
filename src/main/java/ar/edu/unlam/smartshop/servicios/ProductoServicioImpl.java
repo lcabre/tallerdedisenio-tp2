@@ -124,20 +124,19 @@ public class ProductoServicioImpl implements ProductoServicio {
     	PivotTable elementoABorrar = new PivotTable();
     		
     	List<PivotTable> menorPrecio = tablaOrdenada;
-    		for (Integer i = 0; i < tablaOrdenada.size(); i++) {
-    			for (Integer j = 0; j < tablaOrdenada.size(); j++) {
-    				if (i != j) {
-    					if ((tablaOrdenada.get(j).getProducto().getId()) == (tablaOrdenada.get(i).getProducto().getId())) {
-    						elementoABorrar = tablaOrdenada.get(j);
-    						menorPrecio.remove(elementoABorrar);
-    					}
-    				}
-    			}
-    		}
+        for (Integer i = 0; i < tablaOrdenada.size(); i++) {
+            for (Integer j = 0; j < tablaOrdenada.size(); j++) {
+                if (i != j) {
+                    if ((tablaOrdenada.get(j).getProducto().getId()) == (tablaOrdenada.get(i).getProducto().getId())) {
+                        elementoABorrar = tablaOrdenada.get(j);
+                        menorPrecio.remove(elementoABorrar);
+                    }
+                }
+            }
+        }
 
-    	
     	List<Establecimiento> establecimientosMenorPrecio = new ArrayList<>();
-    		
+
     		for (Integer i = 0; i < menorPrecio.size(); i++) {
 
     			establecimientosMenorPrecio.add(menorPrecio.get(i).getEstablecimiento());
@@ -180,5 +179,15 @@ public class ProductoServicioImpl implements ProductoServicio {
     @Override
     public Object listByUser(Usuario loguedUser) {
         return productoDao.listByUser(loguedUser);
+    }
+
+    @Override
+    public List listProductosEnEstablecimientos() {
+        return productoDao.listProductosEnEstablecimientos();
+    }
+
+    @Override
+    public List<Producto> getMasBuscados(Usuario loguedUser) {
+        return productoDao.getMasBuscados(loguedUser);
     }
 }

@@ -14,4 +14,8 @@ public interface ListaComprasDao {
     void update(ListaCompras lista);
 
     List getByUserHistorial(Usuario loguedUser);
+
+    ListaCompras getById(Integer id);
+
+    void delete(ListaCompras listaActual);
 }

@@ -67,6 +67,16 @@ public class ListaComprasServicioImpl implements ListaComprasServicio {
 		return listaComprasDao.getByUserHistorial(loguedUser);
 	}
 
+	@Override
+	public ListaCompras getById(Integer id) {
+		return listaComprasDao.getById(id);
+	}
+
+	@Override
+	public void delete(ListaCompras listaActual) {
+		listaComprasDao.delete(listaActual);
+	}
+
 	private boolean containsId(List<Producto> list, long id) {
 		for (Producto object : list) {
 			if (object.getId() == id) {

@@ -30,7 +30,7 @@ public class Producto {
     @OneToMany(mappedBy = "producto",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<PivotTable> pivotTables = new ArrayList<>();
 
-    @ManyToMany(mappedBy = "productos", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "productos", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private List<ListaCompras> listaDeCompras = new ArrayList<>();
 
     @Transient
@@ -171,5 +171,15 @@ public class Producto {
         this.establecimientoBusqueda = Collections.max(establecimientos, Comparator.comparing(Establecimiento::getRapidezEnAtencion));
 
         return establecimientoBusqueda;
+    }
+
+    public int cantidadBuscado(List<Producto> lista, Producto producto) {
+        int count = 0;
+        for (Producto p : lista) {
+            if (p.equals(producto)) {
+                count++;
+            }
+        }
+        return count;
     }
 }

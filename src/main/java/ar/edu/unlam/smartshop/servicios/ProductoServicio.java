@@ -20,6 +20,8 @@ public interface ProductoServicio {
     List busquedaPorMenorPrecio(ListaCompras lista);
     List busquedaPorMayorRapidezEnAtencion(ListaCompras lista);
     String parseJsonData(List<Establecimiento> establecimientos);
-
     Object listByUser(Usuario loguedUser);
+    List listProductosEnEstablecimientos();
+
+    List<Producto> getMasBuscados(Usuario loguedUser);
 }

@@ -81,6 +81,7 @@ public class ListaComprasDaoImpl implements ListaComprasDao {
 				.add(Restrictions.eq("finalizada",true))
 				.setMaxResults(10)
 				.addOrder(Order.desc("fecha"))
+				.addOrder(Order.desc("id"))
 				.list();
 
 		if(historial!=null){
@@ -96,5 +97,31 @@ public class ListaComprasDaoImpl implements ListaComprasDao {
 		}
 
 		return historial;
+	}
+
+	@Override
+	@Transactional
+	public ListaCompras getById(Integer id) {
+		final Session session = sessionFactory.getCurrentSession();
+		ListaCompras lista = (ListaCompras) session.createCriteria(ListaCompras.class)
+				.add(Restrictions.eq("id",id))
+				.uniqueResult();
+
+		Hibernate.initialize(lista.getProductos());
+
+		if(lista.getProductos().size()>0){
+			for (Producto producto:lista.getProductos()) {
+				Hibernate.initialize(producto.getPivotTables());
+			}
+		}
+
+		return lista;
+	}
+
+	@Override
+	@Transactional
+	public void delete(ListaCompras listaActual) {
+		final Session session = sessionFactory.getCurrentSession();
+		session.delete(listaActual);
 	}
 }
