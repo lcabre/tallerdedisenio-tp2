@@ -42,4 +42,14 @@ public class EstablecimientoController {
 
         return new ModelAndView("/establecimiento/lista", model);
     }
+
+	public void setServicioLogin(ServicioLogin servicioMock) {
+		// TODO Auto-generated method stub
+		this.servicioLogin = servicioMock;
+	}
+
+	public void setEstablecimientoServicio(EstablecimientoServicio establecimientoServicioMock) {
+		// TODO Auto-generated method stub
+		this.establecimientoServicio = establecimientoServicioMock;
+	}
 }

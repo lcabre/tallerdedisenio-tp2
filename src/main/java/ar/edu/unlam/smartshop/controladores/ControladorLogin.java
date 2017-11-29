@@ -33,7 +33,7 @@ public class ControladorLogin {
 		Usuario usuarioBuscado = servicioLogin.getUser(usuario);
 		if (usuarioBuscado != null) {
 			request.getSession().setAttribute("NOMBRE", usuarioBuscado.getApellido()+", "+usuarioBuscado.getNombre());
-			request.getSession().setAttribute("TIPO", usuarioBuscado.getTipo().getNombre());
+			request.getSession().setAttribute("TIPO", usuarioBuscado.getNombreTipo());
 			request.getSession().setAttribute("EMAIL", usuarioBuscado.getEmail());
 			return new ModelAndView("redirect:/");
 		} else {
@@ -48,5 +48,10 @@ public class ControladorLogin {
 		request.getSession().removeAttribute("TIPO");
 		request.getSession().removeAttribute("EMAiL");
 		return "redirect:/";
+	}
+
+	public void setServicioLogin(ServicioLogin servicioMock) {
+		// TODO Auto-generated method stub
+		this.servicioLogin = servicioMock;
 	}
 }

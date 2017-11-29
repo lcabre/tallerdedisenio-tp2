@@ -26,7 +26,7 @@ public class ListaComprasController {
     private ListaComprasServicio listaComprasServicio;
 
     @RequestMapping(path = "/lista/finalizar", method = RequestMethod.POST)
-    public String finalizarListaDeCompras(@RequestParam("id") Integer id, HttpServletRequest request)
+    public String finalizarListaDeCompras(HttpServletRequest request)
     {
         Usuario loguedUser = servicioLogin.getUserByMail((String) request.getSession().getAttribute("EMAIL"));
         ListaCompras lista = listaComprasServicio.getByUserACtual(loguedUser);
