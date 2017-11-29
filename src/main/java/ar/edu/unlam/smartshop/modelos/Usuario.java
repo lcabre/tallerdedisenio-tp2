@@ -17,6 +17,7 @@ public class Usuario {
     private String barrio;
     private String direccion;
     private Integer numero;
+    private String nombreTipo;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_tipo_usuario")
@@ -98,6 +99,11 @@ public class Usuario {
 
     public void setTipo(TipoUusuario tipo) {
         this.tipo = tipo;
+    }
+    
+    public String getNombreTipo(){
+    	this.nombreTipo = tipo.getNombre();
+    	return nombreTipo;
     }
 
     public List<ListaCompras> getListaDeCompras() {
