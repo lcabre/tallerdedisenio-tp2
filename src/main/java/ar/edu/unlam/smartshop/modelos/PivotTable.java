@@ -22,6 +22,8 @@ public class PivotTable {
 
     private Integer calificacion;
 
+    private Boolean enOferta;
+
     public Integer getId() {
         return id;
     }
@@ -60,5 +62,13 @@ public class PivotTable {
 
     public void setCalificacion(Integer calificacion) {
         this.calificacion = calificacion;
+    }
+
+    public Boolean getEnOferta() {
+        return enOferta;
+    }
+
+    public void setEnOferta(Boolean enOferta) {
+        this.enOferta = enOferta;
     }
 }

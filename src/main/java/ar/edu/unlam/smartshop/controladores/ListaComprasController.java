@@ -7,6 +7,7 @@ import ar.edu.unlam.smartshop.servicios.ListaComprasServicio;
 import ar.edu.unlam.smartshop.servicios.ServicioLogin;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,7 +27,7 @@ public class ListaComprasController {
     private ListaComprasServicio listaComprasServicio;
 
     @RequestMapping(path = "/lista/finalizar", method = RequestMethod.POST)
-    public String finalizarListaDeCompras(@RequestParam("id") Integer id, HttpServletRequest request)
+    public String finalizarListaDeCompras(HttpServletRequest request)
     {
         Usuario loguedUser = servicioLogin.getUserByMail((String) request.getSession().getAttribute("EMAIL"));
         ListaCompras lista = listaComprasServicio.getByUserACtual(loguedUser);
@@ -68,5 +69,14 @@ public class ListaComprasController {
             model.put("error","No tiene listas de compras guardadas");
 
         return new ModelAndView("/historial/historial", model);
+    }
+
+    @RequestMapping(path = "/busquedas/categoria/producto/save", method = RequestMethod.POST)
+    public String agregarProducto(@ModelAttribute("producto") Producto producto, HttpServletRequest request)
+    {
+        Usuario loguedUser = servicioLogin.getUserByMail((String) request.getSession().getAttribute("EMAIL"));
+        ListaCompras lista = listaComprasServicio.getByUserACtual(loguedUser);
+        listaComprasServicio.addProducto(lista, producto, loguedUser);
+        return "redirect:/milista";
     }
 }

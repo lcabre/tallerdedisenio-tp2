@@ -23,5 +23,5 @@ public interface ProductoServicio {
     Object listByUser(Usuario loguedUser);
     List listProductosEnEstablecimientos();
 
-    List<Producto> getMasBuscados(Usuario loguedUser);
+    List getMasBuscados(Usuario loguedUser);
 }

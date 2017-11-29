@@ -71,6 +71,10 @@ public class Producto {
         this.pivotTables = pivotTables;
     }
 
+    public void setPivotTable(PivotTable pivotTable){
+        this.pivotTables.add(pivotTable);
+    }
+
     public List<ListaCompras> getListaDeCompras() {
         return listaDeCompras;
     }

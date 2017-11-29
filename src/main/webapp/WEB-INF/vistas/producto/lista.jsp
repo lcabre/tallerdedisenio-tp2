@@ -52,6 +52,7 @@
                                 <th class="col-md-4">Nombre</th>
                                 <th class="col-md-4">Categoria</th>
                                 <th class="col-md-4">Establecimiento</th>
+                                <th>Oferta</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
                             </tr>
@@ -67,6 +68,26 @@
                                             ${pivot.establecimiento.nombre} ($${pivot.precio}) -
                                         </c:forEach>
                                     </td>
+                                    <c:forEach items="${producto.pivotTables}" var="pivot">
+                                        <c:set var="en_oferta" value="true" />
+                                        <c:if test="${empty pivot.enOferta}">
+                                            <c:set var="en_oferta" value="false" />
+                                        </c:if>
+                                    </c:forEach>
+
+                                    <c:if test="${en_oferta == 'true'}">
+                                        <form:form action="${pageContext.request.contextPath}/productos/quitaroferta" method="POST" modelAttribute="productoModel">
+                                            <form:input path="id" type="hidden" name="id" value="${producto.id}"/>
+                                            <td><button type="submit" class="btn btn-danger" title="Quitar oferta"><span class="glyphicon glyphicon-star"></span></button></td>
+                                        </form:form>
+                                    </c:if>
+                                    <c:if test="${en_oferta == 'false'}">
+                                        <form:form action="${pageContext.request.contextPath}/productos/marcarofertado" method="POST" modelAttribute="productoModel">
+                                            <form:input path="id" type="hidden" name="id" value="${producto.id}"/>
+                                            <td><button type="submit" class="btn btn-success" title="Marcar como oferta"><span class="glyphicon glyphicon-star"></span></button></td>
+                                        </form:form>
+                                    </c:if>
+
                                     <td><a href="#"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span></button></a></td>
                                     <td><a href="#"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a></td>
                                 </tr>

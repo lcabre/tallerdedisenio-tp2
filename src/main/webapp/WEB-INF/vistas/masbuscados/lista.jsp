@@ -44,11 +44,7 @@
                             <tr>
                                 <th class="col-md-4">#</th>
                                 <th class="col-md-4">Nombre</th>
-                                <th class="col-md-4">Categoria</th>
-                                <th class="col-md-4">Establecimiento</th>
-                                <th class="col-md-4">Buscado</th>
-                                <th>Edit</th>
-                                <th>Delete</th>
+                                <th class="col-md-4">Total</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -56,15 +52,7 @@
                                 <tr>
                                     <td><c:out value="${producto.id}"/></td>
                                     <td><c:out value="${producto.nombre}"/></td>
-                                    <td><c:out value="${producto.categoria.nombre}"/></td>
-                                    <td>
-                                        <c:forEach items="${producto.pivotTables}" var="pivot">
-                                            ${pivot.establecimiento.nombre} ($${pivot.precio}) -
-                                        </c:forEach>
-                                    </td>
-                                    <td><c:out value="${producto.cantidadBuscado(records, producto)}"/></td>
-                                    <td><a href="#"><button type="button" class="btn btn-success"><span class="glyphicon glyphicon-pencil"></span></button></a></td>
-                                    <td><a href="#"><button type="button" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></button></a></td>
+                                    <td><c:out value="${producto.total}"/></td>
                                 </tr>
                             </c:forEach>
                             </tbody>

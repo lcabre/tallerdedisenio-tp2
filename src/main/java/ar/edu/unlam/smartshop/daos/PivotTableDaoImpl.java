@@ -35,7 +35,8 @@ public class PivotTableDaoImpl implements PivotTableDao{
     @Override
     @Transactional
     public void update(PivotTable pivotTable) {
-
+        final Session session = sessionFactory.getCurrentSession();
+        session.update(pivotTable);
     }
 
     @Override

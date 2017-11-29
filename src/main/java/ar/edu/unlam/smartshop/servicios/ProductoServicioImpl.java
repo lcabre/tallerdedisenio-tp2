@@ -3,6 +3,7 @@ package ar.edu.unlam.smartshop.servicios;
 import ar.edu.unlam.smartshop.daos.PivotTableDao;
 import ar.edu.unlam.smartshop.daos.ProductoDao;
 import ar.edu.unlam.smartshop.modelos.*;
+import ar.edu.unlam.smartshop.modelos.api.MapAPI;
 import ar.edu.unlam.smartshop.modelview.ProductoModelView;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -78,7 +79,8 @@ public class ProductoServicioImpl implements ProductoServicio {
 
         for (Producto producto:productos){
             if(producto.getPivotTables().size()>0){
-                Establecimiento establecimientoMasCercano = producto.getEstablecimientoMasCercano(direccion);
+                //Establecimiento establecimientoMasCercano = producto.getEstablecimientoMasCercano(direccion);
+                Establecimiento establecimientoMasCercano = MapAPI.getEstablecimientoMasCercano(producto,direccion);
                 if(!establecimientosCercanos.contains(establecimientoMasCercano)){
                     establecimientosCercanos.add(establecimientoMasCercano);
                 }
@@ -187,7 +189,7 @@ public class ProductoServicioImpl implements ProductoServicio {
     }
 
     @Override
-    public List<Producto> getMasBuscados(Usuario loguedUser) {
+    public List getMasBuscados(Usuario loguedUser) {
         return productoDao.getMasBuscados(loguedUser);
     }
 }

@@ -17,7 +17,7 @@
                 <c:if test="${not empty sessionScope.TIPO && sessionScope.TIPO == 'Establecimiento'}">
                     <li class="${pageContext.request.requestURI.contains('establecimiento') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/establecimientos">Mis Establecimientos</a></li>
                     <li class="${pageContext.request.requestURI.contains('producto') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/productos">Mis Productos</a></li>
-                   <!-- <li class="${pageContext.request.requestURI.contains('masbuscados') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/productos/mas/buscados">Productos Mas Buscados</a></li>-->
+                    <li class="${pageContext.request.requestURI.contains('masbuscados') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/productos/mas/buscados">Productos Mas Buscados</a></li>
                 </c:if>
                 <c:if test="${not empty sessionScope.TIPO && sessionScope.TIPO == 'Cliente'}">
                     <li class="${pageContext.request.requestURI.contains('busqueda') ? 'active' : ''}"><a href="${pageContext.request.contextPath}/busquedas">Busquedas</a></li>

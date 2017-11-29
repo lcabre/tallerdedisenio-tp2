@@ -16,4 +16,9 @@ public class PivotTableServicioImpl implements PivotTableServicio {
 	public void save(PivotTable pivot) {
 		pivotTableDao.save(pivot);
 	}
+
+	@Override
+	public void update(PivotTable pivot) {
+		pivotTableDao.update(pivot);
+	}
 }

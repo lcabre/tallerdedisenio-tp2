@@ -127,4 +127,5 @@ public class Usuario {
     public String getFullAdress(){
         return this.barrio+", "+this.direccion+" "+this.numero;
     }
+
 }

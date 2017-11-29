@@ -1,6 +1,7 @@
 package ar.edu.unlam.smartshop.daos;
 
 import ar.edu.unlam.smartshop.modelos.*;
+import ar.edu.unlam.smartshop.modelview.ProductoCountModelView;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
@@ -9,6 +10,7 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -120,20 +122,28 @@ public class ProductoDaoImpl implements ProductoDao{
 	@Transactional
 	public List getMasBuscados(Usuario loguedUser) {
 		final Session session = sessionFactory.getCurrentSession();
-		return session.createCriteria(Producto.class)
+		/*return session.createCriteria(Producto.class)
 				.createAlias("listaDeCompras", "lista")
 				.createAlias("pivotTables", "pivot")
 				.createAlias("pivot.establecimiento","est" )
 				.createAlias("est.usuario","usr" )
+				.add(Restrictions.eq("usr.id",loguedUser.getId()))
 				.setProjection(Projections.projectionList()
-						.add(Projections.groupProperty("id"),"id")
-						.add(Projections.groupProperty("usr.id"),"user_id")
-						.add(Projections.property("nombre"),"nombre")
-						.add(Projections.rowCount(),"total")
+						.add(Projections.alias(Projections.groupProperty("est.id"),"id_establecimiento"))
+						.add(Projections.alias(Projections.groupProperty("id"), "id_producto"))
+						.add(Projections.alias(Projections.property("nombre"),"nombre"))
+						.add(Projections.alias(Projections.count("id"),"total"))
 				)
-				//.setProjection(Projections.rowCount())
-				//.add(Restrictions.eq("usr.id",loguedUser.getId()))
-				.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
+				.list();*/
+
+		return session.createCriteria(Producto.class)
+				.createAlias("listaDeCompras", "lista")
+				.setProjection(Projections.projectionList()
+						.add(Projections.alias(Projections.groupProperty("id"), "id"))
+						.add(Projections.alias(Projections.property("nombre"),"nombre"))
+						.add(Projections.alias(Projections.count("id"),"total"))
+				)
+				.setResultTransformer(new AliasToBeanResultTransformer(ProductoCountModelView.class))
 				.list();
 	}
 }

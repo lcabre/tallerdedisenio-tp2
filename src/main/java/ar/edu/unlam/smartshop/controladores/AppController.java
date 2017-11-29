@@ -28,6 +28,12 @@ public class AppController {
     @Inject
     private PivotTableServicio pivotTableServicio;
 
+    @Inject
+    private ServicioLogin servicioLogin;
+
+    @Inject
+    private ListaComprasServicio listaComprasServicio;
+
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public ModelAndView index() {
         if(!primeravez){
@@ -168,6 +174,8 @@ public class AppController {
         usuario2.setTipo(tipo2);
 
         usuarioServicio.save(usuario2);
-
+        ////////////////////////////////
+        ListaCompras lista = listaComprasServicio.getByUserACtual(usuario2);
+        listaComprasServicio.addProducto(lista, huevos, usuario2);
     }
 }
