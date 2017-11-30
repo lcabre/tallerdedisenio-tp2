@@ -42,7 +42,7 @@ public class EstablecimientoControllerTest {
 	when(requestMock.getSession()).thenReturn(sessionMock); //Cuando me piden la sesion retorno la sesion mockeada
 	
 	String mav = cont.store(establecimientoMock, requestMock);
-	String valorBuscado = "redirect:/establecimientos";
+	String valorBuscado = "redire  ct:/establecimientos";
 	
 	assertTrue(mav.equals(valorBuscado));
 	verify(servicioMock, times(1)).getUserByMail(any(String.class));
