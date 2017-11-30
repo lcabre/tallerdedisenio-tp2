@@ -51,4 +51,14 @@ public class UsuarioController {
         usuarioServicio.save(usuario);//Completar los metodos del servicio
         return "redirect:/login";//llevar a pagina de login
     }
+
+	public void setTipoUsuarioServicio(TipoUsuarioServicio tipoUsuarioServicio) {
+		// TODO Auto-generated method stub
+		this.tipoUsuarioServicio = tipoUsuarioServicio;
+	}
+
+	public void setServicioUsuario(UsuarioServicio servicioUsuarioMock) {
+		// TODO Auto-generated method stub
+		this.usuarioServicio = servicioUsuarioMock;
+	}
 }

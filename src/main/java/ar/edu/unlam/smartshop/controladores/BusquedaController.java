@@ -102,4 +102,10 @@ public class BusquedaController {
 		this.listaComprasServicio = servicioListaComprasMock;
 	}
 
+	public void setServicioProductoMock(ProductoServicio productoServicioMock) {
+		// TODO Auto-generated method stub
+		this.productoServicio = productoServicioMock;
+	}
+	
+
 }
