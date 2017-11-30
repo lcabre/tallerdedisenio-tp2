@@ -26,21 +26,21 @@ public class LoginControllerTest {
 		
 		Usuario usuarioMock = mock(Usuario.class);
 		TipoUusuario tipoMock = mock(TipoUusuario.class);
-		//tipoMock.setNombre("Cliente");
+
 		ServicioLogin servicioMock = mock(ServicioLogin.class);
 		HttpServletRequest requestMock = mock(HttpServletRequest.class);	
-		HttpSession sessionMock = mock(HttpSession.class); //sesion
+		HttpSession sessionMock = mock(HttpSession.class);
 		
 		cont.setServicioLogin(servicioMock);
 		servicioMock.getUser(usuarioMock);
-		when(requestMock.getSession()).thenReturn(sessionMock); //Cuando me piden la sesion retorno la sesion mockeada
+		when(requestMock.getSession()).thenReturn(sessionMock);
 
 		when(tipoMock.getNombre()).thenReturn("Cliente");
 		when(usuarioMock.getApellido()).thenReturn("Rodriguez"); 
 		when(usuarioMock.getNombre()).thenReturn("Erika");
 		when(usuarioMock.getEmail()).thenReturn("erika@gmail.com");
 		when(usuarioMock.getTipo()).thenReturn(tipoMock);
-		when(servicioMock.getUser(any(Usuario.class))).thenReturn(usuarioMock); // Cuando
+		when(servicioMock.getUser(any(Usuario.class))).thenReturn(usuarioMock);
 		
 		ModelAndView mav = cont.validarLogin(usuarioMock, requestMock);
 		
@@ -48,8 +48,6 @@ public class LoginControllerTest {
 		verify(sessionMock, times(1)).setAttribute("NOMBRE", "Rodriguez, Erika");
 		verify(sessionMock, times(1)).setAttribute("TIPO", "Cliente");
 		verify(sessionMock, times(1)).setAttribute("EMAIL", "erika@gmail.com");
-
-
 	}
 
 }

@@ -1,16 +1,11 @@
-package ar.edu.unlam.smartshop;
+package ar.edu.unlam.smartshop.busquedas;
 
-import ar.edu.unlam.smartshop.controladores.BusquedaController;
 import ar.edu.unlam.smartshop.modelos.*;
-import ar.edu.unlam.smartshop.modelos.api.Distance;
 import ar.edu.unlam.smartshop.modelos.api.MapAPI;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.annotation.Rollback;
 
-import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 
 import static org.mockito.Mockito.mock;
