@@ -43,6 +43,11 @@ public class EstablecimientoServicioImpl implements EstablecimientoServicio {
     }
 
     @Override
+    public List getByUser(Usuario loguedUser) {
+        return establecimientoDao.getByUser(loguedUser);
+    }
+
+    @Override
     public void delete(Integer id) {
         establecimientoDao.delete(id);
     }

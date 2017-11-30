@@ -14,7 +14,6 @@ import static org.mockito.Mockito.when;
 public class TestBusquedaCercania {
 
     @Test
-    @Rollback
     public  void  alPasarUnProductoYUnaDireccionMeDevuelveElEstablecimientoMasCercanoAEseProducto(){
 
         Establecimiento masCercano = new Establecimiento();

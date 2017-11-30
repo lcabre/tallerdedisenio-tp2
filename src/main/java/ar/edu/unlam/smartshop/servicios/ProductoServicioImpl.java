@@ -38,13 +38,23 @@ public class ProductoServicioImpl implements ProductoServicio {
         Producto producto = productoDao.getById(productoModel.getIdProducto());
 
         Establecimiento establecimiento = establecimientoServicio.getById(productoModel.getIdEstablecimiento());
-        PivotTable pivotTable = new PivotTable();
 
-        pivotTable.setProducto(producto);
-        pivotTable.setEstablecimiento(establecimiento);
-        pivotTable.setPrecio(productoModel.getPrecio());
+        Boolean noExiste = true;
+        for (PivotTable pivot:establecimiento.getPivotTables()) {
+            if(pivot.getProducto().getId() == producto.getId()){
+                noExiste = false;
+            }
+        }
 
-        pivotTableDao.save(pivotTable);
+        if(noExiste){
+            PivotTable pivotTable = new PivotTable();
+
+            pivotTable.setProducto(producto);
+            pivotTable.setEstablecimiento(establecimiento);
+            pivotTable.setPrecio(productoModel.getPrecio());
+
+            pivotTableDao.save(pivotTable);
+        }
     }
 
     @Override

@@ -11,4 +11,6 @@ public interface EstablecimientoServicio {
     void delete(Integer id);
     List list();
     Establecimiento getById(Integer id);
+
+    List getByUser(Usuario loguedUser);
 }

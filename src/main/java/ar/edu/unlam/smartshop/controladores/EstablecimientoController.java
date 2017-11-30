@@ -36,9 +36,10 @@ public class EstablecimientoController {
     }
 
     @RequestMapping("/establecimientos")
-    public ModelAndView productos(){
+    public ModelAndView productos(HttpServletRequest request){
+        Usuario loguedUser = servicioLogin.getUserByMail((String) request.getSession().getAttribute("EMAIL"));
         ModelMap model = new ModelMap();
-        model.put("records",establecimientoServicio.list());
+        model.put("records",establecimientoServicio.getByUser(loguedUser));
 
         return new ModelAndView("/establecimiento/lista", model);
     }

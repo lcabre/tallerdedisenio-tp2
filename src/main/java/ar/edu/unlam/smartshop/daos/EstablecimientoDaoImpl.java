@@ -2,6 +2,7 @@ package ar.edu.unlam.smartshop.daos;
 
 import ar.edu.unlam.smartshop.modelos.Establecimiento;
 import ar.edu.unlam.smartshop.modelos.Producto;
+import ar.edu.unlam.smartshop.modelos.Usuario;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -64,6 +65,17 @@ public class EstablecimientoDaoImpl implements EstablecimientoDao{
         return (List<Establecimiento>) session.createCriteria(Establecimiento.class)
                 .createAlias("productos", "prod")
                 .add(Restrictions.in("prod.id",producto))
+                .list();
+    }
+
+    @Override
+    @Transactional
+    public List getByUser(Usuario loguedUser) {
+        final Session session = sessionFactory.getCurrentSession();
+        return (List<Establecimiento>) session.createCriteria(Establecimiento.class)
+                .createAlias("usuario", "user")
+                .add(Restrictions.in("user.id",loguedUser.getId()))
+                .setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY)
                 .list();
     }
 

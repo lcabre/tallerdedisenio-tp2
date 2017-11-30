@@ -14,7 +14,7 @@ public class PivotTable {
     @JoinColumn(name = "establecimiento_id")
     private Establecimiento establecimiento;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @ManyToOne(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinColumn(name = "producto_id")
     private Producto producto;
 
