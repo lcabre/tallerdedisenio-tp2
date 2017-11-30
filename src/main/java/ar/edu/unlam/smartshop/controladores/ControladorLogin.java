@@ -49,4 +49,9 @@ public class ControladorLogin {
 		request.getSession().removeAttribute("EMAiL");
 		return "redirect:/";
 	}
+
+	public void setServicioLogin(ServicioLogin servicioMock) {
+		// TODO Auto-generated method stub
+		this.servicioLogin = servicioMock;
+	}
 }

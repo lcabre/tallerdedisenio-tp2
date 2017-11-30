@@ -92,4 +92,14 @@ public class BusquedaController {
         return new ModelAndView("/busquedas/busqueda", model);
     }
 
+	public void setServicioLogin(ServicioLogin servicioMock) {
+		// TODO Auto-generated method stub
+		this.servicioLogin = servicioMock;
+	}
+	
+	public void setServicioListaComprasMock(ListaComprasServicio servicioListaComprasMock) {
+		// TODO Auto-generated method stub
+		this.listaComprasServicio = servicioListaComprasMock;
+	}
+
 }
