@@ -79,4 +79,14 @@ public class ListaComprasController {
         listaComprasServicio.addProducto(lista, producto, loguedUser);
         return "redirect:/milista";
     }
+
+	public void setServicioLogin(ServicioLogin servicioMock) {
+		// TODO Auto-generated method stub
+		this.servicioLogin = servicioMock;
+	}
+
+	public void setListaComprasServicio(ListaComprasServicio listaComprasServiciosMock) {
+		// TODO Auto-generated method stub
+		this.listaComprasServicio = listaComprasServiciosMock;
+	}
 }
